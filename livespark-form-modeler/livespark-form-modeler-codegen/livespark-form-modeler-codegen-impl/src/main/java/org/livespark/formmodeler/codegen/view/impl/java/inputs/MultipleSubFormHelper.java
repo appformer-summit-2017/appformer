@@ -131,14 +131,14 @@ public class MultipleSubFormHelper extends AbstractNestedModelHelper implements 
                 .setName( "getCreationForm" )
                 .setPublic()
                 .setReturnType( "Class<" + creationViewName + ">" )
-                .setBody( "return " + creationViewName + ".class" )
+                .setBody( "return " + creationViewName + ".class;" )
                 .addAnnotation( Override.class );
 
         multipleSubformAdapter.addMethod()
                 .setName( "getEditionForm" )
                 .setPublic()
                 .setReturnType( "Class<" + editionViewName + ">" )
-                .setBody( "return " + editionViewName + ".class" )
+                .setBody( "return " + editionViewName + ".class;" )
                 .addAnnotation( Override.class );
 
         MethodSource<JavaClassSource> getEditionModelMethod = multipleSubformAdapter.addMethod()
@@ -146,7 +146,7 @@ public class MultipleSubFormHelper extends AbstractNestedModelHelper implements 
                 .setPublic()
                 .setReturnType( editionModelName )
                 .setBody( "return new " + editionModelName + "( model );" );
-        getEditionModelMethod.addParameter( editionModelName, "model" );
+        getEditionModelMethod.addParameter( field.getStandaloneClassName(), "model" );
         getEditionModelMethod.addAnnotation( Override.class );
 
 
@@ -167,7 +167,7 @@ public class MultipleSubFormHelper extends AbstractNestedModelHelper implements 
                         viewClass.addImport( imp );
                     }
                     getCrudColumnsBody.append( generator.generateColumnMeta( meta.getProperty(),
-                            meta.getLabel(), cleanClassName( field.getStandaloneClassName() ),context ) );
+                            meta.getLabel(), cleanClassName( field.getStandaloneClassName() ), context ) );
                 }
             }
         }

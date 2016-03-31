@@ -16,6 +16,7 @@
 
 package org.livespark.formmodeler.codegen.services.datamodeller.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 
@@ -35,6 +36,7 @@ import org.livespark.formmodeler.model.MultipleField;
 import org.livespark.formmodeler.model.impl.relations.EmbeddedFormField;
 import org.livespark.formmodeler.model.impl.relations.MultipleSubFormFieldDefinition;
 import org.livespark.formmodeler.model.impl.relations.SubFormFieldDefinition;
+import org.livespark.formmodeler.model.impl.relations.TableColumnMeta;
 import org.livespark.formmodeler.service.FieldManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -108,8 +110,17 @@ public class DataModellerFormGeneratorImpl implements DataModellerFormGenerator 
 
         if ( field instanceof  MultipleField ) {
             MultipleSubFormFieldDefinition multipleSubFormFieldDefinition = (MultipleSubFormFieldDefinition) field;
-            multipleSubFormFieldDefinition.setCreationForm( subForms.get( 0 ).getId() );
-            multipleSubFormFieldDefinition.setEditionForm( subForms.get( 0 ).getId() );
+            FormDefinition form = subForms.get( 0 );
+            multipleSubFormFieldDefinition.setCreationForm( form.getId() );
+            multipleSubFormFieldDefinition.setEditionForm( form.getId() );
+
+            List<TableColumnMeta> columnMetas = new ArrayList<>();
+            for ( FieldDefinition nestedField : form.getFields() ) {
+                TableColumnMeta meta = new TableColumnMeta( nestedField.getLabel(), nestedField.getBoundPropertyName() );
+                columnMetas.add( meta );
+            }
+
+            multipleSubFormFieldDefinition.setColumnMetas( columnMetas );
         } else {
             SubFormFieldDefinition subFormField = (SubFormFieldDefinition) field;
             subFormField.setNestedForm( subForms.get( 0 ).getId() );

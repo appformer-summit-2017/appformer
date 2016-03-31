@@ -116,7 +116,6 @@ public class DataObjectChangeObserver {
     protected boolean isFormAware( final Path path ) {
         return path != null &&
                 //TODO review this filtering.
-                path.toURI().startsWith( "default://master@ls-playground" ) &&
                 path.getFileName().endsWith( ".java" ) &&
                 !path.getFileName().endsWith( ENTITY_SERVICE_SUFFIX ) &&
                 !path.getFileName().endsWith( FORM_MODEL_SUFFIX ) &&

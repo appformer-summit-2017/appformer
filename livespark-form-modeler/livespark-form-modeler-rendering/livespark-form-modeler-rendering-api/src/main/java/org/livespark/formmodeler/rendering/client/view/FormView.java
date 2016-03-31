@@ -59,6 +59,7 @@ public abstract class FormView<M extends FormModel> extends Composite implements
             initEntities();
         }
         initForm();
+        beforeDisplay();
     }
 
     protected abstract void initForm();

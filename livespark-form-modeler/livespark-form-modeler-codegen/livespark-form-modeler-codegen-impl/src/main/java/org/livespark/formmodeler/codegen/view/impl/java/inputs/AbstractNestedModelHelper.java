@@ -74,7 +74,7 @@ public abstract class AbstractNestedModelHelper extends AbstractInputCreatorHelp
     }
 
     protected String getFormViewClassName( FormDefinition form, SourceGenerationContext context ) {
-        return context.getLocalPackage().getPackageName() + "." + form.getName() + SourceGenerationContext.FORM_MODEL_SUFFIX;
+        return context.getLocalPackage().getPackageName() + "." + form.getName() + SourceGenerationContext.FORM_VIEW_SUFFIX;
     }
 
 }

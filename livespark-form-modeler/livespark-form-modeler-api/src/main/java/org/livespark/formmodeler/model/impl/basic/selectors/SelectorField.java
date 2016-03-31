@@ -18,6 +18,9 @@ package org.livespark.formmodeler.model.impl.basic.selectors;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.livespark.formmodeler.model.FieldDefinition;
 import org.livespark.formmodeler.metaModel.FieldDef;
 
@@ -27,6 +30,8 @@ import org.livespark.formmodeler.metaModel.FieldDef;
 public abstract class SelectorField extends FieldDefinition {
 
     @FieldDef( label = "Options")
+    @NotNull
+    @NotEmpty
     protected List<SelectorOption> options = new ArrayList<SelectorOption>();
 
     protected String dataProvider = "";

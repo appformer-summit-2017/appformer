@@ -15,6 +15,9 @@
  */
 package org.livespark.formmodeler.model.impl.relations;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.livespark.formmodeler.metaModel.ListBox;
@@ -36,10 +39,9 @@ public class SubFormFieldDefinition extends FieldDefinition implements EmbeddedF
     @ListBox( provider = @SelectorDataProvider(
             type = SelectorDataProvider.ProviderType.REMOTE,
             className = "org.livespark.formmodeler.editor.backend.dataProviders.VFSSelectorFormProvider"))
+    @NotNull
+    @NotEmpty
     protected String nestedForm = "";
-
-    protected String embeddedFormView = "";
-    protected String embeddedModel = "";
 
     @Override
     public String getCode() {

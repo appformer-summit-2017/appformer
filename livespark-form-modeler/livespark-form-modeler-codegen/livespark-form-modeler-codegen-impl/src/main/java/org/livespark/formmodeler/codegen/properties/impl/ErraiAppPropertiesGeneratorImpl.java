@@ -39,10 +39,10 @@ public class ErraiAppPropertiesGeneratorImpl implements ErraiAppPropertiesGenera
 
         builder.append( SECURITY_COOKIE_ENABLED );
 
-        builder.append( " \n" );
+        builder.append( "\n" );
         builder.append( CDI_ALTERNATIVES );
 
-        builder.append( " \n\n" );
+        builder.append( "\n\n" );
         generateDeclaration( fullyQualifiedClassNames, builder, MARHSALLING_DECLARATION_LHS );
         generateDeclaration( fullyQualifiedClassNames, builder, BINDING_DECLARATION_LHS );
 

@@ -16,6 +16,9 @@
 
 package org.livespark.formmodeler.model.impl.relations;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
@@ -33,6 +36,8 @@ public class TableColumnMeta {
     @ListBox( provider = @SelectorDataProvider(
             type = SelectorDataProvider.ProviderType.REMOTE,
             className = "org.livespark.formmodeler.editor.backend.dataProviders.BeanPropertiesProvider"))
+    @NotNull
+    @NotEmpty
     private String property;
 
     public TableColumnMeta() {

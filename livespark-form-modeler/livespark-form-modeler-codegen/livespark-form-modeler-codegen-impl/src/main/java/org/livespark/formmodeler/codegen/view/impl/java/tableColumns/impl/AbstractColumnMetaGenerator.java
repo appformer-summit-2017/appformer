@@ -30,11 +30,11 @@ public abstract class AbstractColumnMetaGenerator implements ColumnMetaGenerator
         out.append( getInitializerCode( property, context ) );
 
         out.append( "ColumnMeta< " )
-                .append( context.getEntityName() )
+                .append( modelTypeName )
                 .append( ">" )
                 .append( property + COLUMN_META_SUFFIX )
                 .append( " = new ColumnMeta<" )
-                .append( context.getEntityName() )
+                .append( modelTypeName )
                 .append( ">(" )
                 .append( generateNewColumnSource( property, modelTypeName, context ) )
                 .append( ", \"" )

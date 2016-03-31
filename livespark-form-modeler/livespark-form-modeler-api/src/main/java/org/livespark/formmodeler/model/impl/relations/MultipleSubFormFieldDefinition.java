@@ -18,6 +18,9 @@ package org.livespark.formmodeler.model.impl.relations;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jboss.errai.common.client.api.annotations.Portable;
 import org.jboss.errai.databinding.client.api.Bindable;
 import org.livespark.formmodeler.metaModel.ListBox;
@@ -40,19 +43,20 @@ public class MultipleSubFormFieldDefinition extends FieldDefinition implements E
     @ListBox( provider = @SelectorDataProvider(
             type = SelectorDataProvider.ProviderType.REMOTE,
             className = "org.livespark.formmodeler.editor.backend.dataProviders.VFSSelectorFormProvider"))
+    @NotEmpty
     protected String creationForm = "";
 
     @FieldDef( label = "Edit Form")
     @ListBox( provider = @SelectorDataProvider(
             type = SelectorDataProvider.ProviderType.REMOTE,
             className = "org.livespark.formmodeler.editor.backend.dataProviders.VFSSelectorFormProvider"))
+    @NotEmpty
     protected String editionForm = "";
 
     @FieldDef( label = "Table Columns")
+    @NotNull
+    @NotEmpty
     private List<TableColumnMeta> columnMetas = new ArrayList<TableColumnMeta>();
-
-    protected String embeddedFormView = "";
-    protected String embeddedModel = "";
 
     @Override
     public String getCode() {

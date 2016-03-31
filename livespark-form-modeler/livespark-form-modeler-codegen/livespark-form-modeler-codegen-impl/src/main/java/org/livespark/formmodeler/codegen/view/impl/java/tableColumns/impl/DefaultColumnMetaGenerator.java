@@ -30,7 +30,7 @@ public class DefaultColumnMetaGenerator extends AbstractColumnMetaGenerator {
                 .append( ">() { " )
                 .append( "@Override\n")
                 .append( "public String getValue( " )
-                .append( context.getEntityName() )
+                .append( modelTypeName )
                 .append( " model ) {" )
                 .append( "Object value = model.get" )
                 .append( StringUtils.capitalize( property ) )
