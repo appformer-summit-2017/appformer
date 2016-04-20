@@ -19,8 +19,8 @@ package org.livespark.formmodeler.renderer.client;
 import com.google.gwt.user.client.ui.Widget;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.databinding.client.PropertyChangeUnsubscribeHandle;
-import org.jboss.errai.databinding.client.api.handler.property.PropertyChangeHandler;
 import org.livespark.formmodeler.model.FieldDefinition;
+import org.livespark.formmodeler.renderer.client.handling.FieldChangeHandler;
 import org.livespark.formmodeler.renderer.service.Model2FormTransformerService;
 import org.livespark.formmodeler.rendering.client.view.validation.FormViewValidator;
 
@@ -45,12 +45,8 @@ public class DynamicFormRendererMock extends DynamicFormRenderer {
     }
 
     @Override
-    protected PropertyChangeUnsubscribeHandle doRegister( String property, PropertyChangeHandler handler ) {
-        return new PropertyChangeUnsubscribeHandle() {
-            @Override
-            public void unsubscribe() {
-            }
-        };
+    protected PropertyChangeUnsubscribeHandle doRegister( String field, String property, FieldChangeHandler handler ) {
+        return () -> System.out.print( "Unsubscribing change handler for: '" + field + "'" );
     }
 
     @Override

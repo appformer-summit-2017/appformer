@@ -27,8 +27,8 @@ import com.google.gwt.user.client.TakesValue;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
-import org.jboss.errai.databinding.client.api.handler.property.PropertyChangeHandler;
 import org.livespark.formmodeler.renderer.client.DynamicFormRenderer;
+import org.livespark.formmodeler.renderer.client.handling.FieldChangeHandler;
 import org.livespark.formmodeler.renderer.service.FormRenderingContext;
 
 @Dependent
@@ -78,12 +78,13 @@ public class SubFormWidget extends Composite implements TakesValue<Object> {
         formRenderer.bind( value );
     }
 
-    public void addPropertyChangeHandler( String property, PropertyChangeHandler handler ) {
-        formRenderer.addPropertyChangeHandler( property, handler );
+
+    public void addFieldChangeHandler( String property, FieldChangeHandler handler ) {
+        formRenderer.addFieldChangeHandler( property, handler );
     }
 
-    public void addPropertyChangeHandler( PropertyChangeHandler handler ) {
-        formRenderer.addPropertyChangeHandler( handler );
+    public void addFieldChangeHandler( FieldChangeHandler handler ) {
+        formRenderer.addFieldChangeHandler( handler );
     }
 
     public void unBind() {

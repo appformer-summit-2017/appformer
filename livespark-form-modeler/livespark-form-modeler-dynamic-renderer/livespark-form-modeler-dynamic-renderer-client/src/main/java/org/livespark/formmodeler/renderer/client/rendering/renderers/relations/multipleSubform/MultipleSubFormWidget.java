@@ -17,10 +17,10 @@ import org.jboss.errai.databinding.client.BindableProxy;
 import org.jboss.errai.databinding.client.BindableProxyFactory;
 import org.jboss.errai.databinding.client.HasProperties;
 import org.jboss.errai.databinding.client.api.DataBinder;
-import org.livespark.formmodeler.model.FieldDefinition;
 import org.livespark.formmodeler.model.impl.relations.MultipleSubFormFieldDefinition;
 import org.livespark.formmodeler.model.impl.relations.TableColumnMeta;
 import org.livespark.formmodeler.renderer.client.DynamicFormRenderer;
+import org.livespark.formmodeler.renderer.client.handling.FieldChangeHandler;
 import org.livespark.formmodeler.renderer.client.rendering.renderers.relations.multipleSubform.columns.ColumnGenerator;
 import org.livespark.formmodeler.renderer.service.FormRenderingContext;
 import org.livespark.widgets.crud.client.component.CrudActionsHelper;
@@ -58,6 +58,8 @@ public class MultipleSubFormWidget extends Composite implements TakesValue<List<
 
     private AsyncDataProvider<HasProperties> dataProvider;
 
+    private FieldChangeHandler changeHandler;
+
     private List<Object> values = null;
     private List<HasProperties> tableValues = new ArrayList<>();
 
@@ -65,7 +67,7 @@ public class MultipleSubFormWidget extends Composite implements TakesValue<List<
         initWidget( uiBinder.createAndBindUi( this ) );
     }
 
-    protected void init( FieldDefinition field ) {
+    protected void init() {
         content.clear();
         content.add( crudComponent );
     }
@@ -182,6 +184,7 @@ public class MultipleSubFormWidget extends Composite implements TakesValue<List<
                 values.add( formRenderer.getModel() );
                 tableValues.add( (HasProperties) formRenderer.getModel() );
                 refreshCrud();
+                fireFieldChange();
             }
 
             @Override
@@ -189,6 +192,7 @@ public class MultipleSubFormWidget extends Composite implements TakesValue<List<
                 values.set( position, formRenderer.getModel() );
                 tableValues.set( position, (HasProperties) formRenderer.getModel() );
                 refreshCrud();
+                fireFieldChange();
             }
 
             @Override
@@ -196,6 +200,7 @@ public class MultipleSubFormWidget extends Composite implements TakesValue<List<
                 values.remove( index );
                 tableValues.remove( index );
                 refreshCrud();
+                fireFieldChange();
             }
         } );
         initValues();
@@ -221,7 +226,7 @@ public class MultipleSubFormWidget extends Composite implements TakesValue<List<
     }
 
     public void config( MultipleSubFormFieldDefinition field, FormRenderingContext renderingContext ) {
-        init( field );
+        init();
 
         this.field = field;
         this.renderingContext = renderingContext;
@@ -257,5 +262,15 @@ public class MultipleSubFormWidget extends Composite implements TakesValue<List<
     @Override
     public List<Object> getValue() {
         return values;
+    }
+
+    public void addFieldChangeHandler( FieldChangeHandler handler ) {
+        this.changeHandler = handler;
+    }
+
+    public void fireFieldChange() {
+        if ( changeHandler != null ) {
+            changeHandler.onFieldChange( field.getName(), values );
+        }
     }
 }
