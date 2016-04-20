@@ -19,12 +19,11 @@ package org.livespark.formmodeler.renderer.client;
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import junit.framework.TestCase;
-import org.jboss.errai.databinding.client.api.handler.property.PropertyChangeEvent;
-import org.jboss.errai.databinding.client.api.handler.property.PropertyChangeHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.livespark.formmodeler.model.FieldDefinition;
+import org.livespark.formmodeler.renderer.client.handling.FieldChangeHandler;
 import org.livespark.formmodeler.renderer.client.rendering.FieldLayoutComponent;
 import org.livespark.formmodeler.renderer.client.rendering.FieldRenderer;
 import org.livespark.formmodeler.renderer.client.rendering.renderers.relations.subform.SubFormWidget;
@@ -34,6 +33,7 @@ import org.livespark.formmodeler.renderer.service.impl.DynamicRenderingContext;
 import org.livespark.formmodeler.renderer.test.model.Employee;
 import org.livespark.formmodeler.renderer.test.util.TestFormGenerator;
 import org.livespark.formmodeler.rendering.client.view.validation.FormViewValidator;
+import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.uberfire.mocks.CallerMock;
@@ -49,6 +49,9 @@ public class DynamicFormRendererTest extends TestCase {
 
     @GwtMock
     private SubFormWidget widget;
+
+    @Mock
+    private FieldChangeHandler changeHandler;
 
     private DynamicFormRenderer.DynamicFormRendererView view;
 
@@ -101,29 +104,11 @@ public class DynamicFormRendererTest extends TestCase {
     public void testBindingAddingPropertyChangeHandler() {
         doBind();
 
-        renderer.addPropertyChangeHandler( new PropertyChangeHandler() {
-            @Override
-            public void onPropertyChange( PropertyChangeEvent event ) {
-            }
-        } );
+        renderer.addFieldChangeHandler( changeHandler );
 
-        renderer.addPropertyChangeHandler( "name", new PropertyChangeHandler() {
-            @Override
-            public void onPropertyChange( PropertyChangeEvent event ) {
-            }
-        } );
+        renderer.addFieldChangeHandler( "name", changeHandler );
 
-        renderer.addPropertyChangeHandler( "address", new PropertyChangeHandler() {
-            @Override
-            public void onPropertyChange( PropertyChangeEvent event ) {
-            }
-        } );
-
-        renderer.addPropertyChangeHandler( "address.street", new PropertyChangeHandler() {
-            @Override
-            public void onPropertyChange( PropertyChangeEvent event ) {
-            }
-        } );
+        renderer.addFieldChangeHandler( "address", changeHandler );
 
         unBind();
     }

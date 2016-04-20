@@ -27,15 +27,18 @@ import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.databinding.client.PropertyChangeUnsubscribeHandle;
 import org.jboss.errai.databinding.client.api.DataBinder;
-import org.jboss.errai.databinding.client.api.handler.property.PropertyChangeHandler;
 import org.livespark.formmodeler.model.FieldDefinition;
+import org.livespark.formmodeler.model.impl.relations.MultipleSubFormFieldDefinition;
 import org.livespark.formmodeler.model.impl.relations.SubFormFieldDefinition;
+import org.livespark.formmodeler.renderer.client.handling.FieldChangeHandler;
 import org.livespark.formmodeler.renderer.client.rendering.FieldLayoutComponent;
+import org.livespark.formmodeler.renderer.client.rendering.renderers.relations.multipleSubform.MultipleSubFormWidget;
 import org.livespark.formmodeler.renderer.client.rendering.renderers.relations.subform.SubFormWidget;
 import org.livespark.formmodeler.renderer.service.FormRenderingContext;
 import org.livespark.formmodeler.renderer.service.Model2FormTransformerService;
 import org.livespark.formmodeler.rendering.client.view.validation.FormViewValidator;
 import org.livespark.widgets.crud.client.component.formDisplay.IsFormView;
+import org.uberfire.mvp.Command;
 
 @Dependent
 public class DynamicFormRenderer implements IsWidget, IsFormView {
@@ -74,11 +77,18 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
     }
 
     public void renderDefaultForm( final Object model ) {
+        renderDefaultForm( model, null );
+    }
+
+    public void renderDefaultForm( final Object model, final Command callback ) {
         transformerService.call( new RemoteCallback<FormRenderingContext>() {
             @Override
             public void callback( FormRenderingContext context ) {
                 context.setModel( model );
                 render( context );
+                if ( callback != null ) {
+                    callback.execute();
+                }
             }
         } ).createContext( model );
     }
@@ -118,64 +128,86 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
         }
     }
 
-    public void addPropertyChangeHandler( PropertyChangeHandler handler ) {
-        addPropertyChangeHandler( null, handler );
+    public void addFieldChangeHandler( FieldChangeHandler handler ) {
+        addFieldChangeHandler( null, handler );
     }
 
-    public void addPropertyChangeHandler( String property, PropertyChangeHandler handler ) {
+    public void addFieldChangeHandler( String fieldName, FieldChangeHandler handler ) {
         if ( context != null && isBinded() ) {
-            if ( property != null ) {
-
-                boolean composed = property.indexOf( "." ) != -1;
-
-                String root = property;
-                String child = null;
-
-                if ( composed ) {
-                    int index = property.indexOf( "." );
-                    root = property.substring( 0, index );
-
-                    child = property.substring( index + 1 );
-                }
-
-                FieldDefinition field = context.getRootForm().getFieldByName( root );
+            if ( fieldName != null ) {
+                FieldDefinition field = context.getRootForm().getFieldByName( fieldName );
                 if ( field == null ) {
-                    registerChangeHandler( property, handler );
+                    throw new IllegalArgumentException( "Form doesn't contain any field identified by: '" + fieldName + "'" );
                 } else {
+                    FieldLayoutComponent component = view.getFieldLayoutComponentForField( field );
+
                     if ( field instanceof SubFormFieldDefinition ) {
-
-                        FieldLayoutComponent component = view.getFieldLayoutComponentForField( field );
-
                         SubFormWidget subFormWidget = (SubFormWidget) component.getFieldRenderer().getInputWidget();
+                        subFormWidget.addFieldChangeHandler( field.getBindingExpression(), handler );
+                    } else if ( field instanceof MultipleSubFormFieldDefinition ) {
 
-                        if ( composed ) {
-                            subFormWidget.addPropertyChangeHandler( child, handler );
-                        } else {
-                            subFormWidget.addPropertyChangeHandler( handler );
-                        }
+                        MultipleSubFormWidget widget = (MultipleSubFormWidget) component.getFieldRenderer().getInputWidget();
+                        widget.addFieldChangeHandler( handler );
+
                     } else {
-                        registerChangeHandler( field.getBindingExpression(), handler );
+                        registerChangeHandler( field.getModelName(), field.getBindingExpression(), handler );
                     }
                 }
             } else {
-                registerChangeHandler( null, handler );
+                registerAnonymousChangeHandler( handler );
             }
         }
     }
 
-    protected void registerChangeHandler( String property, PropertyChangeHandler handler ) {
+    protected void registerAnonymousChangeHandler( final FieldChangeHandler handler ) {
+        registerChangeHandler( null, null, handler );
+        List<String> registeredModels = new ArrayList<>();
+        for ( final FieldDefinition field : context.getRootForm().getFields() ) {
+            if ( !registeredModels.contains( field.getModelName() )) {
+
+                registeredModels.add( field.getModelName() );
+
+                FieldLayoutComponent component = view.getFieldLayoutComponentForField( field );
+
+                if ( field instanceof SubFormFieldDefinition ) {
+                    SubFormWidget subFormWidget = (SubFormWidget) component.getFieldRenderer().getInputWidget();
+                    subFormWidget.addFieldChangeHandler( handler );
+                } else if ( field instanceof MultipleSubFormFieldDefinition ) {
+
+                    MultipleSubFormWidget widget = (MultipleSubFormWidget) component.getFieldRenderer().getInputWidget();
+                    widget.addFieldChangeHandler( handler );
+
+                } else {
+                    if ( field.getBindingExpression().indexOf( '.' ) != -1 ) {
+                        registerChangeHandler( field.getModelName(), field.getModelName() + ".**", handler );
+                    } else {
+                        registerChangeHandler( field.getModelName(), field.getModelName(), handler );
+                    }
+                }
+            }
+        }
+    }
+
+    protected void registerChangeHandler( String field, String property, FieldChangeHandler handler ) {
         if ( isBinded() ) {
-            PropertyChangeUnsubscribeHandle unsubscribeHandle = doRegister( property, handler );
+            PropertyChangeUnsubscribeHandle unsubscribeHandle = doRegister( field, property, handler );
 
             unsubscribeHandlers.add( unsubscribeHandle );
         }
     }
 
-    protected PropertyChangeUnsubscribeHandle doRegister( String property, PropertyChangeHandler handler ) {
+    protected PropertyChangeUnsubscribeHandle doRegister( final String field, String property, FieldChangeHandler handler ) {
         if ( property == null ) {
-            return binder.addPropertyChangeHandler( handler );
+            return binder.addPropertyChangeHandler( event -> {
+                    String fieldName = field != null ? field : event.getPropertyName();
+                    handler.onFieldChange( fieldName, event.getNewValue() );
+                });
         }
-        return binder.addPropertyChangeHandler( property, handler );
+        return binder.addPropertyChangeHandler( property,
+                event -> {
+                    String fieldName = field != null ? field : event.getPropertyName();
+                    handler.onFieldChange( fieldName, event.getNewValue() );
+                });
     }
 
     public void unBind() {
