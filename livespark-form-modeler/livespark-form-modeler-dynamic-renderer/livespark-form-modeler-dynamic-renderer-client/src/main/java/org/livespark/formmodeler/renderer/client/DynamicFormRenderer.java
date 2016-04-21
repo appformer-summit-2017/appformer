@@ -27,6 +27,7 @@ import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.databinding.client.PropertyChangeUnsubscribeHandle;
 import org.jboss.errai.databinding.client.api.DataBinder;
+import org.livespark.formmodeler.metaModel.FieldDef;
 import org.livespark.formmodeler.model.FieldDefinition;
 import org.livespark.formmodeler.model.impl.relations.MultipleSubFormFieldDefinition;
 import org.livespark.formmodeler.model.impl.relations.SubFormFieldDefinition;
@@ -139,19 +140,7 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
                 if ( field == null ) {
                     throw new IllegalArgumentException( "Form doesn't contain any field identified by: '" + fieldName + "'" );
                 } else {
-                    FieldLayoutComponent component = view.getFieldLayoutComponentForField( field );
-
-                    if ( field instanceof SubFormFieldDefinition ) {
-                        SubFormWidget subFormWidget = (SubFormWidget) component.getFieldRenderer().getInputWidget();
-                        subFormWidget.addFieldChangeHandler( field.getBindingExpression(), handler );
-                    } else if ( field instanceof MultipleSubFormFieldDefinition ) {
-
-                        MultipleSubFormWidget widget = (MultipleSubFormWidget) component.getFieldRenderer().getInputWidget();
-                        widget.addFieldChangeHandler( handler );
-
-                    } else {
-                        registerChangeHandler( field.getModelName(), field.getBindingExpression(), handler );
-                    }
+                    registerFieldChangeHandler( field, handler );
                 }
             } else {
                 registerAnonymousChangeHandler( handler );
@@ -167,23 +156,30 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
 
                 registeredModels.add( field.getModelName() );
 
-                FieldLayoutComponent component = view.getFieldLayoutComponentForField( field );
+                registerFieldChangeHandler( field, handler );
+            }
+        }
+    }
 
-                if ( field instanceof SubFormFieldDefinition ) {
-                    SubFormWidget subFormWidget = (SubFormWidget) component.getFieldRenderer().getInputWidget();
-                    subFormWidget.addFieldChangeHandler( handler );
-                } else if ( field instanceof MultipleSubFormFieldDefinition ) {
+    protected void registerFieldChangeHandler( FieldDefinition field, FieldChangeHandler handler ) {
+        FieldLayoutComponent component = view.getFieldLayoutComponentForField( field );
 
-                    MultipleSubFormWidget widget = (MultipleSubFormWidget) component.getFieldRenderer().getInputWidget();
-                    widget.addFieldChangeHandler( handler );
+        if ( field instanceof SubFormFieldDefinition ) {
+            FieldChangeHandler nestedHandler = ( fieldName, newValue ) -> {
+                handler.onFieldChange( field.getModelName() + "." + fieldName, newValue );
+            };
+            SubFormWidget subFormWidget = (SubFormWidget) component.getFieldRenderer().getInputWidget();
+            subFormWidget.addFieldChangeHandler( nestedHandler );
+        } else if ( field instanceof MultipleSubFormFieldDefinition ) {
 
-                } else {
-                    if ( field.getBindingExpression().indexOf( '.' ) != -1 ) {
-                        registerChangeHandler( field.getModelName(), field.getModelName() + ".**", handler );
-                    } else {
-                        registerChangeHandler( field.getModelName(), field.getModelName(), handler );
-                    }
-                }
+            MultipleSubFormWidget widget = (MultipleSubFormWidget) component.getFieldRenderer().getInputWidget();
+            widget.addFieldChangeHandler( handler );
+
+        } else {
+            if ( field.getBindingExpression().indexOf( '.' ) != -1 ) {
+                registerChangeHandler( field.getModelName(), field.getModelName() + ".**", handler );
+            } else {
+                registerChangeHandler( field.getModelName(), field.getModelName(), handler );
             }
         }
     }
