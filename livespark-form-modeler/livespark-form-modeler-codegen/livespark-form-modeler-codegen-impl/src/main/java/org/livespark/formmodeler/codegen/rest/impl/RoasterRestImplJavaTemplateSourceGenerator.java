@@ -18,7 +18,6 @@ package org.livespark.formmodeler.codegen.rest.impl;
 
 import static org.livespark.formmodeler.codegen.util.SourceGenerationUtil.EJB_STATELESS;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;

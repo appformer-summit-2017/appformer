@@ -19,7 +19,6 @@ package org.livespark.formmodeler.renderer.backend.service.impl;
 import java.lang.annotation.Annotation;
 
 import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
 
 import org.jboss.weld.environment.se.Weld;
 import org.jboss.weld.environment.se.WeldContainer;
@@ -34,7 +33,6 @@ import org.livespark.formmodeler.renderer.backend.service.impl.processors.FieldA
 import org.livespark.formmodeler.renderer.test.model.Employee;
 import org.livespark.formmodeler.renderer.test.model.Person;
 import org.livespark.formmodeler.service.FieldManager;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;

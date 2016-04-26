@@ -27,12 +27,13 @@ import com.google.gwt.user.client.TakesValue;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
+import org.livespark.formmodeler.common.engine.handling.FieldChangeHandler;
+import org.livespark.formmodeler.common.engine.handling.IsNestedModel;
 import org.livespark.formmodeler.renderer.client.DynamicFormRenderer;
-import org.livespark.formmodeler.renderer.client.handling.FieldChangeHandler;
 import org.livespark.formmodeler.renderer.service.FormRenderingContext;
 
 @Dependent
-public class SubFormWidget extends Composite implements TakesValue<Object> {
+public class SubFormWidget extends Composite implements TakesValue<Object>, IsNestedModel {
 
     interface SubFormWidgetBinder
             extends
@@ -78,11 +79,7 @@ public class SubFormWidget extends Composite implements TakesValue<Object> {
         formRenderer.bind( value );
     }
 
-
-    public void addFieldChangeHandler( String property, FieldChangeHandler handler ) {
-        formRenderer.addFieldChangeHandler( property, handler );
-    }
-
+    @Override
     public void addFieldChangeHandler( FieldChangeHandler handler ) {
         formRenderer.addFieldChangeHandler( handler );
     }

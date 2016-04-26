@@ -42,7 +42,6 @@ import org.livespark.formmodeler.renderer.backend.service.impl.processors.FieldA
 import org.livespark.formmodeler.renderer.service.FormRenderingContext;
 import org.livespark.formmodeler.renderer.service.Model2FormTransformerService;
 import org.livespark.formmodeler.renderer.service.impl.DynamicRenderingContext;
-import org.livespark.formmodeler.service.FieldManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

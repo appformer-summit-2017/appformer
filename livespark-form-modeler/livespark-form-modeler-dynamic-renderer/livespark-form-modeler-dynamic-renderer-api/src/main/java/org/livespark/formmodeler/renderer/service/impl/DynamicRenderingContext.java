@@ -16,9 +16,7 @@
 
 package org.livespark.formmodeler.renderer.service.impl;
 
-import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
-import org.livespark.formmodeler.model.FormDefinition;
 import org.livespark.formmodeler.renderer.service.FormRenderingContext;
 
 @Portable

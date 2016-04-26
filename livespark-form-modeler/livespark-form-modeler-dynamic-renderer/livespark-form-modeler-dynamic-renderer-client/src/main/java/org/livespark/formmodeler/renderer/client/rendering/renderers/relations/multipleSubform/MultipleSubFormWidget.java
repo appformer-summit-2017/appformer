@@ -17,10 +17,11 @@ import org.jboss.errai.databinding.client.BindableProxy;
 import org.jboss.errai.databinding.client.BindableProxyFactory;
 import org.jboss.errai.databinding.client.HasProperties;
 import org.jboss.errai.databinding.client.api.DataBinder;
+import org.livespark.formmodeler.common.engine.handling.FieldChangeHandler;
+import org.livespark.formmodeler.common.engine.handling.IsNestedModel;
 import org.livespark.formmodeler.model.impl.relations.MultipleSubFormFieldDefinition;
 import org.livespark.formmodeler.model.impl.relations.TableColumnMeta;
 import org.livespark.formmodeler.renderer.client.DynamicFormRenderer;
-import org.livespark.formmodeler.renderer.client.handling.FieldChangeHandler;
 import org.livespark.formmodeler.renderer.client.rendering.renderers.relations.multipleSubform.columns.ColumnGenerator;
 import org.livespark.formmodeler.renderer.service.FormRenderingContext;
 import org.livespark.widgets.crud.client.component.CrudActionsHelper;
@@ -28,7 +29,7 @@ import org.livespark.widgets.crud.client.component.CrudComponent;
 import org.livespark.widgets.crud.client.component.formDisplay.IsFormView;
 import org.uberfire.ext.widgets.table.client.ColumnMeta;
 
-public class MultipleSubFormWidget extends Composite implements TakesValue<List<Object>> {
+public class MultipleSubFormWidget extends Composite implements TakesValue<List<Object>>, IsNestedModel {
 
     public static final int PAGE_SIZE = 5;
 
@@ -264,6 +265,7 @@ public class MultipleSubFormWidget extends Composite implements TakesValue<List<
         return values;
     }
 
+    @Override
     public void addFieldChangeHandler( FieldChangeHandler handler ) {
         this.changeHandler = handler;
     }
