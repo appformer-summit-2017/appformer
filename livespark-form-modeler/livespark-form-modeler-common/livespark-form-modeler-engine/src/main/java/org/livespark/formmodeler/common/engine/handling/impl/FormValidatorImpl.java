@@ -120,7 +120,7 @@ public class FormValidatorImpl implements FormValidator {
         FormField field = formFieldProvider.findFormField( propertyPath.iterator().next().getName() );
 
         if ( field == null ) {
-            String fieldName = propertyPath.toString().replaceAll( ".", NESTED_PROPERTY_SEPARATOR );
+            String fieldName = propertyPath.toString().replace( ".", NESTED_PROPERTY_SEPARATOR );
 
             field = formFieldProvider.findFormField( fieldName );
         }
