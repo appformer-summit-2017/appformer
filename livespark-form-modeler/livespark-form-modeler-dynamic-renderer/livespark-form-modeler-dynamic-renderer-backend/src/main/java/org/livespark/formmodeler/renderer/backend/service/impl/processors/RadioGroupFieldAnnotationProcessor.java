@@ -23,10 +23,8 @@ import java.util.List;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
-import org.livespark.formmodeler.metaModel.ListBox;
 import org.livespark.formmodeler.metaModel.Option;
 import org.livespark.formmodeler.metaModel.RadioGroup;
-import org.livespark.formmodeler.model.impl.basic.selectors.ListBoxFieldDefinition;
 import org.livespark.formmodeler.model.impl.basic.selectors.RadioGroupFieldDefinition;
 import org.livespark.formmodeler.model.impl.basic.selectors.SelectorOption;
 import org.livespark.formmodeler.renderer.backend.service.impl.FieldSetting;

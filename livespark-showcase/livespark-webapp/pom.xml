@@ -1356,6 +1356,13 @@
       <artifactId>livespark-form-modeler-api</artifactId>
     </dependency>
 
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-form-modeler-engine</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
     <dependency>
       <groupId>org.livespark</groupId>
       <artifactId>livespark-form-modeler-dynamic-renderer-api</artifactId>
@@ -1661,6 +1668,7 @@
               <!-- LiveSpark -->
               <compileSourcesArtifact>org.livespark:livespark-crud-component</compileSourcesArtifact>
               <compileSourcesArtifact>org.livespark:livespark-form-modeler-api</compileSourcesArtifact>
+              <compileSourcesArtifact>org.livespark:livespark-form-modeler-engine</compileSourcesArtifact>
               <compileSourcesArtifact>org.livespark:livespark-form-modeler-rendering-api</compileSourcesArtifact>
               <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-api</compileSourcesArtifact>
               <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-client</compileSourcesArtifact>

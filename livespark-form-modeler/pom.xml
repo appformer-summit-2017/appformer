@@ -15,7 +15,7 @@
   <packaging>pom</packaging>
 
   <modules>
-    <module>livespark-form-modeler-api</module>
+    <module>livespark-form-modeler-common</module>
     <module>livespark-form-modeler-codegen</module>
     <module>livespark-form-modeler-rendering</module>
     <module>livespark-form-modeler-dynamic-renderer</module>

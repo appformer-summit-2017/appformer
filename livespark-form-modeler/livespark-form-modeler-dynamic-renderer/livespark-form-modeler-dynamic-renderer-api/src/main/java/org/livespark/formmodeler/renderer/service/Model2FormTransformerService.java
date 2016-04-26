@@ -17,7 +17,6 @@
 package org.livespark.formmodeler.renderer.service;
 
 import org.jboss.errai.bus.server.annotations.Remote;
-import org.livespark.formmodeler.model.FormDefinition;
 
 @Remote
 public interface Model2FormTransformerService {

@@ -79,37 +79,50 @@ public class FormViewValidator {
         return findFormGroup( groupId, element.getParentElement() );
     }
 
-    public void clearFieldErrors() {
-
+    public void clearAllFieldErrors() {
         for ( FieldGroup group : formInputs.values() ) {
-            if ( group.getFormGroup() != null )
-                group.getFormGroup().removeClassName( "has-error" );
-            if ( group.getHelpBlock() != null )
-                group.getHelpBlock().setInnerHTML( "" );
+            clearFieldGroupErrors( group );
         }
+    }
 
+    public void clearFieldErrors( String fieldName ) {
+        clearFieldGroupErrors( formInputs.get( fieldName ) );
+    }
+
+    protected void clearFieldGroupErrors( FieldGroup group ) {
+        if ( group == null ) {
+            return;
+        }
+        if ( group.getFormGroup() != null )
+            group.getFormGroup().removeClassName( "has-error" );
+        if ( group.getHelpBlock() != null )
+            group.getHelpBlock().setInnerHTML( "" );
+    }
+
+    protected void showFieldError( String fieldId, String message ) {
+        FieldGroup group = formInputs.get( fieldId );
+
+        if ( group.getFormGroup() != null )
+            group.getFormGroup().addClassName( "has-error" );
+        if ( group.getHelpBlock() != null )
+            group.getHelpBlock().setInnerHTML( message );
     }
 
     public boolean validate( Object model ) {
         boolean isValid = true;
 
-        clearFieldErrors();
-
         try {
+            clearAllFieldErrors();
+
             Set<ConstraintViolation<Object>> result = validator.validate( model );
 
             for ( ConstraintViolation<Object> validation : result ) {
                 String property = validation.getPropertyPath().toString().replace( ".", "_" );
-                if ( !formInputs.containsKey( property ) )
+                if ( !formInputs.containsKey( property ) ) {
                     continue;
+                }
                 isValid = false;
-
-                FieldGroup group = formInputs.get( property );
-
-                if ( group.getFormGroup() != null )
-                    group.getFormGroup().addClassName( "has-error" );
-                if ( group.getHelpBlock() != null )
-                    group.getHelpBlock().setInnerHTML( validation.getMessage() );
+                showFieldError( property, validation.getMessage() );
             }
         } catch ( IllegalArgumentException ex ) {
             GWT.log( "Error trying to validate model: model does not any validation constraint. " );
@@ -117,6 +130,46 @@ public class FormViewValidator {
         }
 
         return isValid;
+    }
+
+    public boolean validate( Object model, String propertyName ) {
+        try {
+            clearFieldErrors( propertyName );
+
+            Set<ConstraintViolation<Object>> result = validator.validate( model );
+
+            for ( ConstraintViolation<Object> constraint : result ) {
+
+                if ( checkFieldConstraintMatching( propertyName, constraint )) {
+                    showFieldError( propertyName, constraint.getMessage() );
+                    return false;
+                }
+            }
+        } catch ( IllegalArgumentException ex ) {
+            GWT.log( "Error trying to validate model: model does not any validation constraint. " );
+            return true;
+        }
+
+        return true;
+    }
+
+    private boolean checkFieldConstraintMatching( String fielName, ConstraintViolation constraint ) {
+
+        if ( fielName != null ) {
+            if (fielName.indexOf( "_" ) != -1 ) {
+                String propertyPath = constraint.getPropertyPath().iterator().next().getName();
+                return propertyPath.equals( fielName );
+            }
+        }
+
+        return false;
+    }
+
+
+
+    public void clear() {
+        clearAllFieldErrors();
+        formInputs.clear();
     }
 
     private class FieldGroup {

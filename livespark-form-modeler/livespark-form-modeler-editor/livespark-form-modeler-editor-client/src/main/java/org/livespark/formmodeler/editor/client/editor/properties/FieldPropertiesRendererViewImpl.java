@@ -27,7 +27,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.Widget;
 import org.gwtbootstrap3.client.ui.Button;
@@ -39,7 +38,6 @@ import org.livespark.formmodeler.editor.client.resources.i18n.Constants;
 import org.livespark.formmodeler.editor.client.resources.i18n.FieldProperties;
 import org.livespark.formmodeler.editor.service.FormEditorRenderingContext;
 import org.livespark.formmodeler.renderer.client.DynamicFormRenderer;
-import org.livespark.formmodeler.renderer.client.handling.FieldChangeHandler;
 import org.uberfire.ext.widgets.common.client.common.popups.BaseModal;
 
 @Dependent

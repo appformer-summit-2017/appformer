@@ -22,8 +22,9 @@ import junit.framework.TestCase;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.livespark.formmodeler.common.engine.handling.FieldChangeHandler;
+import org.livespark.formmodeler.common.engine.handling.FormHandler;
 import org.livespark.formmodeler.model.FieldDefinition;
-import org.livespark.formmodeler.renderer.client.handling.FieldChangeHandler;
 import org.livespark.formmodeler.renderer.client.rendering.FieldLayoutComponent;
 import org.livespark.formmodeler.renderer.client.rendering.FieldRenderer;
 import org.livespark.formmodeler.renderer.client.rendering.renderers.relations.subform.SubFormWidget;
@@ -52,6 +53,9 @@ public class DynamicFormRendererTest extends TestCase {
 
     @Mock
     private FieldChangeHandler changeHandler;
+
+    @Mock
+    private FormHandler handler;
 
     private DynamicFormRenderer.DynamicFormRendererView view;
 
@@ -86,7 +90,7 @@ public class DynamicFormRendererTest extends TestCase {
         when( fieldRenderer.getInputWidget() ).thenReturn( widget );
 
 
-        renderer = new DynamicFormRendererMock( view, transformer, formViewValidator );
+        renderer = new DynamicFormRendererMock( view, transformer, handler );
         renderer.init();
         verify( view ).setPresenter( renderer );
         renderer.asWidget();

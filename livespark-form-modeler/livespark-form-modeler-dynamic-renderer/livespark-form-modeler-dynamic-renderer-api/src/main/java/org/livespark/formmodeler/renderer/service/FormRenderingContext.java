@@ -19,7 +19,6 @@ package org.livespark.formmodeler.renderer.service;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.livespark.formmodeler.model.FormDefinition;
 
 public abstract class FormRenderingContext<T> {
