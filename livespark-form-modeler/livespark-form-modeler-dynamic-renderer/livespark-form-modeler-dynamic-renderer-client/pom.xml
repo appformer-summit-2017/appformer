@@ -89,11 +89,6 @@
       <scope>test</scope>
       <classifier>tests</classifier>
     </dependency>
-    <dependency>
-      <groupId>org.livespark</groupId>
-      <artifactId>livespark-crud-component</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
   </dependencies>
 
 </project>

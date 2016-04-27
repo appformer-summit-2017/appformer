@@ -25,12 +25,12 @@ import org.livespark.formmodeler.common.engine.handling.FieldStyleHandler;
 import org.livespark.formmodeler.common.engine.handling.FormField;
 
 @ApplicationScoped
-public class FieldStyleHanlderImpl implements FieldStyleHandler {
+public class FieldStyleHandlerImpl implements FieldStyleHandler {
 
     public static final String FORM_GROUP_SUFFIX = "_form_group";
     public static final String HELP_BLOCK_SUFFIX = "_help_block";
 
-    private static final String VALIDATION_ERROR_CLASSNAME = "has-error";
+    public static final String VALIDATION_ERROR_CLASSNAME = "has-error";
 
     @Override
     public void displayFieldError( FormField field, String message ) {

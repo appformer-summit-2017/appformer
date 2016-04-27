@@ -33,13 +33,33 @@
       <groupId>com.google.gwt</groupId>
       <artifactId>gwt-user</artifactId>
     </dependency>
+
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-data-binding</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+
     <dependency>
       <groupId>org.jboss.errai</groupId>
       <artifactId>errai-validation</artifactId>
     </dependency>
+
+    <!-- Tests -->
+    <dependency>
+      <groupId>com.google.gwt.gwtmockito</groupId>
+      <artifactId>gwtmockito</artifactId>
+      <scope>test</scope>
+    </dependency>
+
   </dependencies>
 </project>

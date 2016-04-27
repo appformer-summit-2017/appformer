@@ -29,9 +29,9 @@ import org.jboss.errai.databinding.client.api.handler.property.PropertyChangeEve
 import org.jboss.errai.databinding.client.api.handler.property.PropertyChangeHandler;
 import org.livespark.formmodeler.common.engine.handling.FieldChangeHandler;
 import org.livespark.formmodeler.common.engine.handling.FieldChangeHandlerManager;
-import org.livespark.formmodeler.common.engine.handling.FormFieldProvider;
 import org.livespark.formmodeler.common.engine.handling.FieldStyleHandler;
 import org.livespark.formmodeler.common.engine.handling.FormField;
+import org.livespark.formmodeler.common.engine.handling.FormFieldProvider;
 import org.livespark.formmodeler.common.engine.handling.FormHandler;
 import org.livespark.formmodeler.common.engine.handling.FormValidator;
 import org.livespark.formmodeler.common.engine.handling.IsNestedModel;
