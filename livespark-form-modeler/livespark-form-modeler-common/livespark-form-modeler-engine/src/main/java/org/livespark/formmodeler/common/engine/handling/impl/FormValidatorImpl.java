@@ -25,8 +25,8 @@ import javax.validation.Validator;
 
 import com.google.gwt.core.client.GWT;
 import org.livespark.formmodeler.common.engine.handling.FieldStyleHandler;
-import org.livespark.formmodeler.common.engine.handling.FormFieldProvider;
 import org.livespark.formmodeler.common.engine.handling.FormField;
+import org.livespark.formmodeler.common.engine.handling.FormFieldProvider;
 import org.livespark.formmodeler.common.engine.handling.FormValidator;
 
 @Dependent
