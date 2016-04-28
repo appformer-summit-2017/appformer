@@ -28,4 +28,6 @@ public interface FieldChangeHandlerManager {
     void processFieldChange( String fieldName, Object newValue, Object model );
 
     void clear();
+
+    void setValidator( FormValidator validator );
 }

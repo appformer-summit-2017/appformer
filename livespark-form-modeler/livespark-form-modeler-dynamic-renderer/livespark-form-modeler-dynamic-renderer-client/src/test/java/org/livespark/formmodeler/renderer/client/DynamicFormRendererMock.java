@@ -30,32 +30,13 @@ public class DynamicFormRendererMock extends DynamicFormRenderer {
 
     protected boolean binded = false;
 
-    public DynamicFormRendererMock( DynamicFormRendererView view, Caller<Model2FormTransformerService> transformerService, FormHandler formHandler ) {
+    public DynamicFormRendererMock( DynamicFormRendererView view,
+                                    Caller<Model2FormTransformerService> transformerService,
+                                    FormHandler formHandler ) {
         super( view, transformerService, formHandler );
     }
 
     @Override
-    protected void doBind( Object model ) {
-        this.model = model;
-        binded = model != null;
-    }
-
-    @Override
     protected void doBind( Widget input, FieldDefinition field ) {
-    }
-
-    @Override
-    protected void doUnbind() {
-        binded = false;
-    }
-
-    @Override
-    protected boolean isBinded() {
-        return binded;
-    }
-
-    @Override
-    protected Object getBinderModel() {
-        return model;
     }
 }

@@ -16,6 +16,7 @@
 
 package org.livespark.formmodeler.renderer.client;
 
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwtmockito.GwtMock;
 import com.google.gwtmockito.GwtMockitoTestRunner;
 import junit.framework.TestCase;
@@ -38,6 +39,7 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.uberfire.mocks.CallerMock;
+import org.uberfire.mvp.Command;
 
 import static org.mockito.Mockito.*;
 
@@ -55,7 +57,7 @@ public class DynamicFormRendererTest extends TestCase {
     private FieldChangeHandler changeHandler;
 
     @Mock
-    private FormHandler handler;
+    private FormHandler formHandler;
 
     private DynamicFormRenderer.DynamicFormRendererView view;
 
@@ -86,11 +88,11 @@ public class DynamicFormRendererTest extends TestCase {
         } );
 
         when( view.getFieldLayoutComponentForField( any( FieldDefinition.class) ) ).thenReturn( component );
+
         when( component.getFieldRenderer() ).thenReturn( fieldRenderer );
         when( fieldRenderer.getInputWidget() ).thenReturn( widget );
 
-
-        renderer = new DynamicFormRendererMock( view, transformer, handler );
+        renderer = new DynamicFormRendererMock( view, transformer, formHandler );
         renderer.init();
         verify( view ).setPresenter( renderer );
         renderer.asWidget();
@@ -105,7 +107,7 @@ public class DynamicFormRendererTest extends TestCase {
     }
 
     @Test
-    public void testBindingAddingPropertyChangeHandler() {
+    public void testBindingAddingFieldChangeHandler() {
         doBind();
 
         renderer.addFieldChangeHandler( changeHandler );
@@ -114,17 +116,26 @@ public class DynamicFormRendererTest extends TestCase {
 
         renderer.addFieldChangeHandler( "address", changeHandler );
 
+        verify( formHandler ).addFieldChangeHandler( any() );
+        verify( formHandler, times(2) ).addFieldChangeHandler( anyString(), any() );
+
         unBind();
     }
 
     protected void doBind() {
-        renderer.renderDefaultForm( employee );
-        verify( view ).render( any( DynamicRenderingContext.class ) );
-        verify( view ).bind();
+        renderer.renderDefaultForm( employee, new Command() {
+            @Override
+            public void execute() {
+                verify( view ).render( any() );
+                verify( view ).bind();
+                verify( formHandler ).setUp( any( Employee.class ) );
+            }
+        } );
     }
 
     protected void unBind() {
         renderer.isValid();
         renderer.unBind();
+        verify( formHandler ).clear();
     }
 }

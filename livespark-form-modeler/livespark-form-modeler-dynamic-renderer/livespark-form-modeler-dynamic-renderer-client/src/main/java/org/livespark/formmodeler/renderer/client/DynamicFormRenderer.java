@@ -21,12 +21,12 @@ import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
+import org.jboss.errai.common.client.api.Assert;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
-import org.jboss.errai.databinding.client.api.DataBinder;
 import org.livespark.formmodeler.common.engine.handling.FieldChangeHandler;
-import org.livespark.formmodeler.common.engine.handling.impl.FormFieldImpl;
 import org.livespark.formmodeler.common.engine.handling.FormHandler;
+import org.livespark.formmodeler.common.engine.handling.impl.FormFieldImpl;
 import org.livespark.formmodeler.model.FieldDefinition;
 import org.livespark.formmodeler.model.impl.relations.SubFormFieldDefinition;
 import org.livespark.formmodeler.renderer.client.rendering.FieldLayoutComponent;
@@ -54,12 +54,12 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
 
     private FormHandler formHandler;
 
-    private DataBinder binder;
-
     private FormRenderingContext context;
 
     @Inject
-    public DynamicFormRenderer( DynamicFormRendererView view, Caller<Model2FormTransformerService> transformerService, FormHandler formHandler ) {
+    public DynamicFormRenderer( DynamicFormRendererView view,
+                                Caller<Model2FormTransformerService> transformerService,
+                                FormHandler formHandler) {
         this.view = view;
         this.transformerService = transformerService;
         this.formHandler = formHandler;
@@ -88,10 +88,8 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
     }
 
     public void render ( FormRenderingContext context ) {
-        unBind();
-        if ( context == null ) {
-            return;
-        }
+        Assert.notNull( "FormRenderingContext must not be null", context);
+
         this.context = context;
         view.render( context );
         if ( context.getModel() != null ) {
@@ -102,14 +100,9 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
     public void bind( Object model ) {
         if ( context != null && model != null ) {
             context.setModel( model );
-            doBind( model );
+            formHandler.setUp( model );
             view.bind();
         }
-    }
-
-    protected void doBind( Object model ) {
-        binder = DataBinder.forModel( context.getModel() );
-        formHandler.init( binder );
     }
 
     protected void bind( Widget input, FieldDefinition field ) {
@@ -117,7 +110,7 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
     }
 
     protected void doBind( Widget input, final FieldDefinition field ) {
-        if ( isBinded() ) {
+        if ( isInitialized() ) {
             formHandler.registerInput( new FormFieldImpl( field.getName(),
                     field.getBindingExpression(), field.getValidateOnChange(), input) );
         }
@@ -128,7 +121,7 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
     }
 
     public void addFieldChangeHandler( String fieldName, FieldChangeHandler handler ) {
-        if ( context != null && isBinded() ) {
+        if ( context != null && isInitialized() ) {
             if ( fieldName != null ) {
                 FieldDefinition field = context.getRootForm().getFieldByName( fieldName );
                 if ( field == null ) {
@@ -143,10 +136,7 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
     }
 
     public void unBind() {
-        if ( isBinded() ) {
-            doUnbind();
-            formHandler.clear();
-
+        if ( isInitialized() ) {
             for ( FieldDefinition field : context.getRootForm().getFields() ) {
                 if ( field instanceof SubFormFieldDefinition ) {
                     FieldLayoutComponent component = view.getFieldLayoutComponentForField( field );
@@ -154,12 +144,7 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
                     subFormWidget.unBind();
                 }
             }
-        }
-    }
-
-    protected void doUnbind() {
-        if( isBinded() ) {
-            binder.unbind();
+            formHandler.clear();
         }
     }
 
@@ -170,8 +155,8 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
 
     @Override
     public Object getModel() {
-        if ( isBinded() ) {
-            return binder.getModel();
+        if ( formHandler != null ) {
+            return formHandler.getModel();
         }
         return null;
     }
@@ -180,16 +165,12 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
         return formHandler.validate();
     }
 
-    protected Object getBinderModel() {
-        return binder.getModel();
-    }
-
     @Override
     public Widget asWidget() {
         return view.asWidget();
     }
 
-    protected boolean isBinded() {
-        return binder != null;
+    protected boolean isInitialized() {
+        return formHandler != null;
     }
 }

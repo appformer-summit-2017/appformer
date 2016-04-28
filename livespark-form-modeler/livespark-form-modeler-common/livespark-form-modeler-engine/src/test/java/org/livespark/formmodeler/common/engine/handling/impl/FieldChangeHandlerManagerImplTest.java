@@ -43,7 +43,8 @@ public class FieldChangeHandlerManagerImplTest extends AbstractFormEngineTest {
 
         formValidator.setFormFieldProvider( formFieldProvider );
 
-        fieldChangeHandlerManager = new FieldChangeHandlerManagerImpl( formValidator );
+        fieldChangeHandlerManager = new FieldChangeHandlerManagerImpl();
+        fieldChangeHandlerManager.setValidator( formValidator );
 
         executionCounts = 0;
     }

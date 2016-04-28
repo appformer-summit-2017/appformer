@@ -22,10 +22,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.enterprise.context.Dependent;
+
 import org.livespark.formmodeler.common.engine.handling.FieldChangeHandler;
 import org.livespark.formmodeler.common.engine.handling.FieldChangeHandlerManager;
 import org.livespark.formmodeler.common.engine.handling.FormValidator;
 
+@Dependent
 public class FieldChangeHandlerManagerImpl implements FieldChangeHandlerManager {
 
     private FormValidator validator;
@@ -33,7 +36,8 @@ public class FieldChangeHandlerManagerImpl implements FieldChangeHandlerManager 
     private Map<String, FieldChangeProcessor> fieldExecutors = new HashMap<>();
     private List<FieldChangeHandler> defaultChangeHandlers = new ArrayList<>();
 
-    public FieldChangeHandlerManagerImpl( FormValidator validator ) {
+    @Override
+    public void setValidator( FormValidator validator ) {
         this.validator = validator;
     }
 
@@ -78,7 +82,7 @@ public class FieldChangeHandlerManagerImpl implements FieldChangeHandlerManager 
 
         if ( executor != null ) {
             if ( executor.isRequiresValidation() ) {
-                if ( !validator.validate( realFieldName, model ) ) {
+                if ( validator != null && !validator.validate( realFieldName, model ) ) {
                     return;
                 }
             }
