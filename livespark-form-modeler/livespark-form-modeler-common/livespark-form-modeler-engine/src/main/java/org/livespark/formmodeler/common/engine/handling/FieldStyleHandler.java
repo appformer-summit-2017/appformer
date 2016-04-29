@@ -16,6 +16,7 @@
 
 package org.livespark.formmodeler.common.engine.handling;
 
+
 public interface FieldStyleHandler {
 
     void displayFieldError( FormField formField, String errorMessage );

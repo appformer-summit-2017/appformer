@@ -18,16 +18,21 @@ package org.livespark.formmodeler.common.engine.handling.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.enterprise.context.Dependent;
 
+import org.jboss.errai.common.client.api.Assert;
 import org.livespark.formmodeler.common.engine.handling.FieldChangeHandler;
 import org.livespark.formmodeler.common.engine.handling.FieldChangeHandlerManager;
 import org.livespark.formmodeler.common.engine.handling.FormValidator;
 
+/**
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
 @Dependent
 public class FieldChangeHandlerManagerImpl implements FieldChangeHandlerManager {
 
@@ -48,18 +53,20 @@ public class FieldChangeHandlerManagerImpl implements FieldChangeHandlerManager 
 
     @Override
     public void registerField( String fieldName, boolean validateOnChange ) {
+        Assert.notNull( "Field Name cannot be null", fieldName );
         fieldExecutors.put( fieldName, new FieldChangeProcessor( fieldName, validateOnChange ) );
     }
 
     @Override
     public void addFieldChangeHandler( FieldChangeHandler changeHandler ) {
+        Assert.notNull( "FieldChangeHandler cannot be null", changeHandler );
         defaultChangeHandlers.add( changeHandler );
     }
 
     @Override
     public void addFieldChangeHandler( String fieldName, FieldChangeHandler changeHandler ) {
-        assert fieldName != null;
-        assert changeHandler != null;
+        Assert.notNull( "Field Name cannot be null", fieldName );
+        Assert.notNull( "FieldChangeHandler cannot be null", changeHandler );
 
         FieldChangeProcessor executor = fieldExecutors.get( fieldName );
 
@@ -70,7 +77,7 @@ public class FieldChangeHandlerManagerImpl implements FieldChangeHandlerManager 
 
     @Override
     public void processFieldChange( String fieldName, Object newValue, Object model ) {
-        assert fieldName != null;
+        Assert.notNull( "Field Name cannot be null", fieldName );
 
         String realFieldName = fieldName;
 
@@ -101,5 +108,38 @@ public class FieldChangeHandlerManagerImpl implements FieldChangeHandlerManager 
     public void clear() {
         fieldExecutors.clear();
         defaultChangeHandlers.clear();
+    }
+
+    private static class FieldChangeProcessor {
+
+        private String fieldName;
+        private boolean requiresValidation = false;
+
+        private List<FieldChangeHandler> changeHandlers = new ArrayList<>();
+
+        public FieldChangeProcessor( String fieldName, boolean requiresValidation ) {
+            assert fieldName != null;
+
+            this.fieldName = fieldName;
+            this.requiresValidation = requiresValidation;
+        }
+
+        public void addFieldChangeHandler( FieldChangeHandler handler ) {
+            assert handler != null;
+
+            changeHandlers.add( handler );
+        }
+
+        public String getFieldName() {
+            return fieldName;
+        }
+
+        public boolean isRequiresValidation() {
+            return requiresValidation;
+        }
+
+        public Collection<FieldChangeHandler> getChangeHandlers() {
+            return Collections.unmodifiableCollection( changeHandlers );
+        }
     }
 }

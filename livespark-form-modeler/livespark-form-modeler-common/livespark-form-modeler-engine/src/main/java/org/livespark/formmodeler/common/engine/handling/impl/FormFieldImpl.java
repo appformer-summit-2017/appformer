@@ -19,6 +19,9 @@ package org.livespark.formmodeler.common.engine.handling.impl;
 import com.google.gwt.user.client.ui.IsWidget;
 import org.livespark.formmodeler.common.engine.handling.FormField;
 
+/**
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
 public class FormFieldImpl implements FormField {
     private String alias;
     private String bindedName = null;

@@ -18,8 +18,22 @@ package org.livespark.formmodeler.common.engine.handling;
 
 import java.util.Collection;
 
+/**
+ * Component that provides the form fields to other components
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
 public interface FormFieldProvider {
 
+    /**
+     * Retrieves the FormField identified by the given Field Name
+     * @param fieldName The field name.
+     * @return The field identified by the given name
+     */
     FormField findFormField( String fieldName );
+
+    /**
+     * Retrieves a Collection containing all the Form fields
+     * @return
+     */
     Collection<FormField> getAll();
 }

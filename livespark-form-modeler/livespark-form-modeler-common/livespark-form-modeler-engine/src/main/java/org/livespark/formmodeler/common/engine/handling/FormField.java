@@ -18,12 +18,33 @@ package org.livespark.formmodeler.common.engine.handling;
 
 import com.google.gwt.user.client.ui.IsWidget;
 
+/**
+ * Form Field representation
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
 public interface FormField {
+
+    /**
+     * Retrieves the name of the form field
+     * @return The field name.
+     */
     String getFieldName();
 
+    /**
+     * Retrieves the binding string for the form field.
+     * @return The binding string.
+     */
     String getFieldBinding();
 
+    /**
+     * Determines if the field must be validated when the value changes or not.
+     * @return True to validate the field, false if not.
+     */
     boolean isValidateOnChange();
 
+    /**
+     * Retrieves the form field Widget.
+     * @return
+     */
     IsWidget getWidget();
 }

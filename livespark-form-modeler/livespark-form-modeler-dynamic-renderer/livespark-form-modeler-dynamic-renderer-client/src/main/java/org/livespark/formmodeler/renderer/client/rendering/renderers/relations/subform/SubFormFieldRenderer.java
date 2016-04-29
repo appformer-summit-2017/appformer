@@ -45,7 +45,9 @@ public class SubFormFieldRenderer extends FieldRenderer<SubFormFieldDefinition> 
         container.add( subFormWidget );
         if ( renderingContext != null ) {
             FormRenderingContext nestedContext = renderingContext.getCopyFor( field.getNestedForm(), null );
-            subFormWidget.render( nestedContext );
+            if ( nestedContext != null ) {
+                subFormWidget.render( nestedContext );
+            }
         }
     }
 

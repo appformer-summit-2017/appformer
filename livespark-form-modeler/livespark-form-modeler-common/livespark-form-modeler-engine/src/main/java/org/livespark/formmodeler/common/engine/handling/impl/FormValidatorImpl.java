@@ -29,6 +29,9 @@ import org.livespark.formmodeler.common.engine.handling.FormField;
 import org.livespark.formmodeler.common.engine.handling.FormFieldProvider;
 import org.livespark.formmodeler.common.engine.handling.FormValidator;
 
+/**
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
 @Dependent
 public class FormValidatorImpl implements FormValidator {
 

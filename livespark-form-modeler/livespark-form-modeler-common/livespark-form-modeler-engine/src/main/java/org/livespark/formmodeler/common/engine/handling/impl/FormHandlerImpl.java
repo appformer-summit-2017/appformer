@@ -19,6 +19,7 @@ package org.livespark.formmodeler.common.engine.handling.impl;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
@@ -36,6 +37,10 @@ import org.livespark.formmodeler.common.engine.handling.FormHandler;
 import org.livespark.formmodeler.common.engine.handling.FormValidator;
 import org.livespark.formmodeler.common.engine.handling.IsNestedModel;
 
+/**
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
+@Dependent
 public class FormHandlerImpl<T> implements FormHandler<T>, FormFieldProvider {
 
     protected FormValidator validator;

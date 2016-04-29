@@ -16,11 +16,30 @@
 
 package org.livespark.formmodeler.common.engine.handling;
 
+/**
+ * Component that runs the form validation
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
 public interface FormValidator {
 
+    /**
+     * Sets the {@link FormFieldProvider}
+     * @param formFieldProvider
+     */
     void setFormFieldProvider( FormFieldProvider formFieldProvider );
 
+    /**
+     * Validates the given model
+     * @param model
+     * @return Returns true if validation is succesfull or false if not
+     */
     boolean validate( Object model );
 
+    /**
+     * Validates a specific property of the given model
+     * @param propertyName
+     * @param model
+     * @return Returns true if validation is succesfull or false if not
+     */
     boolean validate( String propertyName, Object model );
 }

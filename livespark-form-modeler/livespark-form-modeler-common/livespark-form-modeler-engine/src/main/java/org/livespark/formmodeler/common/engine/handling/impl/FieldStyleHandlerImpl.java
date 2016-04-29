@@ -24,6 +24,9 @@ import com.google.gwt.dom.client.Node;
 import org.livespark.formmodeler.common.engine.handling.FieldStyleHandler;
 import org.livespark.formmodeler.common.engine.handling.FormField;
 
+/**
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
 @ApplicationScoped
 public class FieldStyleHandlerImpl implements FieldStyleHandler {
 

@@ -16,6 +16,16 @@
 
 package org.livespark.formmodeler.common.engine.handling;
 
+/**
+ * Component that handles form field changes.
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
 public interface FieldChangeHandler {
+
+    /**
+     * Method called when a form field changes.
+     * @param fieldName The name of the field that triggered the change
+     * @param newValue The new field value.
+     */
     public void onFieldChange( String fieldName, Object newValue );
 }
