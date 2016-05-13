@@ -48,7 +48,7 @@ public class RadioGroupHelper extends AbstractInputCreatorHelper<RadioGroupField
 
     @Override
     public String getSupportedFieldTypeCode() {
-        return RadioGroupFieldDefinition._CODE;
+        return RadioGroupFieldDefinition.CODE;
     }
 
     @Override

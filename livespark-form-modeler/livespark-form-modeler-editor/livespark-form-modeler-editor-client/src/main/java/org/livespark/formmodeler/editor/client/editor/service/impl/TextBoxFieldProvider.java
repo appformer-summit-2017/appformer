@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 JBoss Inc
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.codegen.view.impl.html.inputs;
+package org.livespark.formmodeler.editor.client.editor.service.impl;
 
+import javax.enterprise.context.Dependent;
+
+import org.livespark.formmodeler.editor.client.editor.service.FieldProvider;
 import org.livespark.formmodeler.model.impl.basic.TextBoxFieldDefinition;
 
 /**
- * Created by pefernan on 4/29/15.
+ * @author Pere Fernandez <pefernan@redhat.com>
  */
-public class TextBoxTemplate extends AbstractInputTemplateProvider {
+@Dependent
+public class TextBoxFieldProvider implements FieldProvider<TextBoxFieldDefinition> {
+    @Override
+    public String supportedFieldType() {
+        return TextBoxFieldDefinition.CODE;
+    }
 
     @Override
-    public String getSupportedFieldTypeCode() {
-        return TextBoxFieldDefinition.CODE;
+    public TextBoxFieldDefinition newInstance() {
+        return new TextBoxFieldDefinition();
     }
 }

@@ -51,7 +51,7 @@ public class RadioGroupFieldRenderer extends SelectorFieldRenderer<RadioGroupFie
 
     @Override
     public String getSupportedFieldDefinitionCode() {
-        return RadioGroupFieldDefinition._CODE;
+        return RadioGroupFieldDefinition.CODE;
     }
 
 

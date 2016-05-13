@@ -25,7 +25,7 @@ public class CheckBoxHelper extends AbstractInputCreatorHelper<CheckBoxFieldDefi
 
     @Override
     public String getSupportedFieldTypeCode() {
-        return CheckBoxFieldDefinition._CODE;
+        return CheckBoxFieldDefinition.CODE;
     }
 
     @Override

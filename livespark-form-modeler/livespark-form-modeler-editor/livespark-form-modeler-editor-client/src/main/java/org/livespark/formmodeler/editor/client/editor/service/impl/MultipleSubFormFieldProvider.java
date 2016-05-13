@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 JBoss Inc
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,26 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.codegen.view.impl.html.inputs;
+package org.livespark.formmodeler.editor.client.editor.service.impl;
 
-import java.io.InputStream;
+import javax.enterprise.context.Dependent;
 
-import org.livespark.formmodeler.codegen.view.impl.html.InputTemplateProvider;
+import org.livespark.formmodeler.editor.client.editor.service.FieldProvider;
 import org.livespark.formmodeler.model.impl.basic.CheckBoxFieldDefinition;
+import org.livespark.formmodeler.model.impl.relations.MultipleSubFormFieldDefinition;
 
 /**
- * Created by pefernan on 4/29/15.
+ * @author Pere Fernandez <pefernan@redhat.com>
  */
-public class CheckBoxTemplate implements InputTemplateProvider {
-
+@Dependent
+public class MultipleSubFormFieldProvider implements FieldProvider<MultipleSubFormFieldDefinition> {
     @Override
-    public String getSupportedFieldTypeCode() {
+    public String supportedFieldType() {
         return CheckBoxFieldDefinition.CODE;
     }
 
     @Override
-    public InputStream getTemplateInputStream() {
-        return getClass().getResourceAsStream( "/org/livespark/formmodeler/codegen/view/impl/html/templates/checkbox.mv" );
+    public MultipleSubFormFieldDefinition newInstance() {
+        return new MultipleSubFormFieldDefinition();
     }
 }

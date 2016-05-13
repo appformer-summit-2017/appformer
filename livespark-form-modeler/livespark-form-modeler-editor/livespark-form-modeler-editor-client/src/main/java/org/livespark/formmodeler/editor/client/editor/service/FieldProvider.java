@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 JBoss Inc
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,14 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.codegen.view.impl.java.inputs;
+package org.livespark.formmodeler.editor.client.editor.service;
 
-import org.livespark.formmodeler.model.impl.basic.TextAreaFieldDefinition;
+import org.livespark.formmodeler.model.FieldDefinition;
 
 /**
- * Created by pefernan on 4/28/15.
+ * @author Pere Fernandez <pefernan@redhat.com>
  */
-public class TextAreaHelper extends AbstractInputCreatorHelper<TextAreaFieldDefinition> {
-
-    @Override
-    public String getSupportedFieldTypeCode() {
-        return TextAreaFieldDefinition.CODE;
-    }
-
-    @Override
-    public String getInputWidget( TextAreaFieldDefinition fieldDefinition ) {
-        return "org.gwtbootstrap3.client.ui.TextArea";
-    }
+public interface FieldProvider<T extends FieldDefinition> {
+    String supportedFieldType();
+    T newInstance();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Red Hat, Inc. and/or its affiliates.
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,25 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.codegen.view.impl.html.inputs;
+package org.livespark.formmodeler.editor.client.editor.service.impl;
 
-import java.io.InputStream;
+import javax.enterprise.context.Dependent;
 
-import org.livespark.formmodeler.codegen.view.impl.html.InputTemplateProvider;
+import org.livespark.formmodeler.editor.client.editor.service.FieldProvider;
 import org.livespark.formmodeler.model.impl.basic.selectors.RadioGroupFieldDefinition;
 
-public class RadioGroupTemplate implements InputTemplateProvider {
-
+/**
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
+@Dependent
+public class RadioGroupFieldProvider implements FieldProvider<RadioGroupFieldDefinition> {
     @Override
-    public String getSupportedFieldTypeCode() {
+    public String supportedFieldType() {
         return RadioGroupFieldDefinition.CODE;
     }
 
     @Override
-    public InputStream getTemplateInputStream() {
-        return getClass().getResourceAsStream( "/org/livespark/formmodeler/codegen/view/impl/html/templates/radiogroup.mv" );
+    public RadioGroupFieldDefinition newInstance() {
+        return new RadioGroupFieldDefinition();
     }
 }

@@ -30,7 +30,7 @@ public class DateBoxHelper extends AbstractInputCreatorHelper<DateBoxFieldDefini
 
     @Override
     public String getSupportedFieldTypeCode() {
-        return DateBoxFieldDefinition._CODE;
+        return DateBoxFieldDefinition.CODE;
     }
 
     @Override

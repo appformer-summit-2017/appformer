@@ -52,7 +52,7 @@ public class MultipleSubFormHelper extends AbstractNestedModelHelper implements 
 
     @Override
     public String getSupportedFieldTypeCode() {
-        return MultipleSubFormFieldDefinition._CODE;
+        return MultipleSubFormFieldDefinition.CODE;
     }
 
     @Override

@@ -13,49 +13,72 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.livespark.formmodeler.renderer.client.rendering.renderers;
 
 import javax.enterprise.context.Dependent;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import org.gwtbootstrap3.client.ui.CheckBox;
+import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.FormGroup;
+import org.gwtbootstrap3.client.ui.FormLabel;
 import org.gwtbootstrap3.client.ui.HelpBlock;
-import org.livespark.formmodeler.model.impl.basic.CheckBoxFieldDefinition;
+import org.gwtbootstrap3.client.ui.Row;
+import org.gwtbootstrap3.client.ui.constants.ColumnSize;
+import org.livespark.formmodeler.model.impl.basic.SliderFieldDefinition;
 import org.livespark.formmodeler.renderer.client.rendering.FieldRenderer;
+import org.livespark.formmodeler.rendering.client.widgets.Slider;
 
 /**
- * Created by pefernan on 9/21/15.
+ * @author Pere Fernandez <pefernan@redhat.com>
  */
 @Dependent
-public class CheckBoxFieldRenderer extends FieldRenderer<CheckBoxFieldDefinition> {
-    private CheckBox checkbox;
+public class SliderFieldRenderer extends FieldRenderer<SliderFieldDefinition> {
+
+    private Slider slider;
 
     @Override
     public String getName() {
-        return "CheckBox";
+        return SliderFieldDefinition.CODE;
     }
 
     @Override
     public void initInputWidget() {
-        checkbox = new CheckBox(field.getLabel());
-        checkbox.setEnabled(!field.getReadonly());
+        slider = new Slider( field.getMin(), field.getMax(), field.getPrecission(), field.getStep() );
+        slider.setEnabled( !field.getReadonly() );
     }
 
     @Override
     public IsWidget getInputWidget() {
-        return checkbox;
+        return slider;
     }
 
+    @Override
     protected void addFormGroupContents( FormGroup group ) {
-        group.add(checkbox);
+        FormLabel label = new FormLabel();
+        label.setText( field.getLabel() );
+
+        label.setFor( slider.getId() );
+        group.add( label );
+
+        Row newRow = new Row();
+
+        Column column = new Column( ColumnSize.MD_12 );
+
+        column.add( slider );
+
+        newRow.add( column );
+
+        group.add( newRow );
+
         HelpBlock helpBlock = new HelpBlock();
         helpBlock.setId( getHelpBlokId( field ) );
-        group.add(helpBlock);
+
+        group.add( helpBlock );
     }
 
     @Override
     public String getSupportedFieldDefinitionCode() {
-        return CheckBoxFieldDefinition.CODE;
+        return SliderFieldDefinition.CODE;
     }
 }

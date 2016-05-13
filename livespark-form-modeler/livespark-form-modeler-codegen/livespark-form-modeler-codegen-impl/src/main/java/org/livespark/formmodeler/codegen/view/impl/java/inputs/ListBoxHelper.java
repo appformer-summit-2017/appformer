@@ -28,7 +28,9 @@ import org.livespark.formmodeler.model.impl.basic.selectors.SelectorOption;
 
 import static org.livespark.formmodeler.codegen.util.SourceGenerationUtil.*;
 
-public class ListBoxHelper extends AbstractInputCreatorHelper<ListBoxFieldDefinition> implements RequiresCustomCode<ListBoxFieldDefinition>, RequiresExtraFields<ListBoxFieldDefinition> {
+public class ListBoxHelper extends AbstractInputCreatorHelper<ListBoxFieldDefinition> implements
+        RequiresCustomCode<ListBoxFieldDefinition>,
+        RequiresExtraFields<ListBoxFieldDefinition> {
 
     public static final String LOAD_LIST_VALUES_METHOD_NAME = "loadListValues_";
     public static final String LISTBOX_RENDERER_SUFFIX = "_ListValueRenderer";
@@ -42,7 +44,7 @@ public class ListBoxHelper extends AbstractInputCreatorHelper<ListBoxFieldDefini
 
     @Override
     public String getSupportedFieldTypeCode() {
-        return ListBoxFieldDefinition._CODE;
+        return ListBoxFieldDefinition.CODE;
     }
 
     @Override

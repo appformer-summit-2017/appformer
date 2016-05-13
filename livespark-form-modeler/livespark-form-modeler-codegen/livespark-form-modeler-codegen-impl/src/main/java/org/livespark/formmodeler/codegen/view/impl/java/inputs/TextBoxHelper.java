@@ -25,7 +25,7 @@ public class TextBoxHelper extends AbstractInputCreatorHelper<TextBoxFieldDefini
 
     @Override
     public String getSupportedFieldTypeCode() {
-        return TextBoxFieldDefinition._CODE;
+        return TextBoxFieldDefinition.CODE;
     }
 
     @Override

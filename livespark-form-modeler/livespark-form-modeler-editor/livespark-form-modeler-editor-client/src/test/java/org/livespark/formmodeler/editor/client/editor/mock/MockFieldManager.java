@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 JBoss Inc
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.livespark.formmodeler.editor.client.editor.mock;
 
 import org.livespark.formmodeler.model.FieldDefinition;
 import org.livespark.formmodeler.model.impl.basic.CheckBoxFieldDefinition;
 import org.livespark.formmodeler.model.impl.basic.DateBoxFieldDefinition;
+import org.livespark.formmodeler.model.impl.basic.SliderFieldDefinition;
 import org.livespark.formmodeler.model.impl.basic.TextAreaFieldDefinition;
 import org.livespark.formmodeler.model.impl.basic.TextBoxFieldDefinition;
 import org.livespark.formmodeler.model.impl.basic.selectors.ListBoxFieldDefinition;
@@ -37,19 +39,21 @@ public class MockFieldManager extends AbstractFieldManager {
         registerFieldDefinition( new RadioGroupFieldDefinition() );
         registerFieldDefinition( new SubFormFieldDefinition() );
         registerFieldDefinition( new MultipleSubFormFieldDefinition() );
+        registerFieldDefinition( new SliderFieldDefinition() );
     }
 
     @Override
     protected FieldDefinition createNewInstance(FieldDefinition definition) throws Exception {
         if ( definition != null ) {
-            if (definition.getCode().equals(TextBoxFieldDefinition._CODE)) return new TextBoxFieldDefinition();
-            if (definition.getCode().equals(TextAreaFieldDefinition._CODE)) return new TextAreaFieldDefinition();
-            if (definition.getCode().equals(CheckBoxFieldDefinition._CODE)) return new CheckBoxFieldDefinition();
-            if (definition.getCode().equals(DateBoxFieldDefinition._CODE)) return new DateBoxFieldDefinition();
-            if (definition.getCode().equals(ListBoxFieldDefinition._CODE)) return new ListBoxFieldDefinition();
-            if (definition.getCode().equals(RadioGroupFieldDefinition._CODE)) return new RadioGroupFieldDefinition();
-            if (definition.getCode().equals(SubFormFieldDefinition._CODE)) return new SubFormFieldDefinition();
-            if (definition.getCode().equals(MultipleSubFormFieldDefinition._CODE)) return new MultipleSubFormFieldDefinition();
+            if (definition.getCode().equals(TextBoxFieldDefinition.CODE )) return new TextBoxFieldDefinition();
+            if (definition.getCode().equals(TextAreaFieldDefinition.CODE )) return new TextAreaFieldDefinition();
+            if (definition.getCode().equals(CheckBoxFieldDefinition.CODE )) return new CheckBoxFieldDefinition();
+            if (definition.getCode().equals(DateBoxFieldDefinition.CODE )) return new DateBoxFieldDefinition();
+            if (definition.getCode().equals(ListBoxFieldDefinition.CODE )) return new ListBoxFieldDefinition();
+            if (definition.getCode().equals(RadioGroupFieldDefinition.CODE )) return new RadioGroupFieldDefinition();
+            if (definition.getCode().equals(SubFormFieldDefinition.CODE )) return new SubFormFieldDefinition();
+            if (definition.getCode().equals(MultipleSubFormFieldDefinition.CODE )) return new MultipleSubFormFieldDefinition();
+            if (definition.getCode().equals(SliderFieldDefinition.CODE )) return new SliderFieldDefinition();
         }
         return  null;
     }

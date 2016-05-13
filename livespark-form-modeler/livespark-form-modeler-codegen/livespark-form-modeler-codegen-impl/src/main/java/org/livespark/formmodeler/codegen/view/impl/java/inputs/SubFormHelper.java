@@ -36,7 +36,7 @@ public class SubFormHelper extends AbstractNestedModelHelper implements Requires
 
     @Override
     public String getSupportedFieldTypeCode() {
-        return SubFormFieldDefinition._CODE;
+        return SubFormFieldDefinition.CODE;
     }
 
     @Override

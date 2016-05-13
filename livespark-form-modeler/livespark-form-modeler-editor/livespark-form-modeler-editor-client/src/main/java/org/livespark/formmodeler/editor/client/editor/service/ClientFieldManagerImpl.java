@@ -15,47 +15,45 @@
  */
 package org.livespark.formmodeler.editor.client.editor.service;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
+import org.jboss.errai.ioc.client.container.IOC;
+import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.livespark.formmodeler.model.FieldDefinition;
-import org.livespark.formmodeler.model.impl.basic.CheckBoxFieldDefinition;
-import org.livespark.formmodeler.model.impl.basic.DateBoxFieldDefinition;
-import org.livespark.formmodeler.model.impl.basic.TextAreaFieldDefinition;
-import org.livespark.formmodeler.model.impl.basic.TextBoxFieldDefinition;
-import org.livespark.formmodeler.model.impl.basic.selectors.ListBoxFieldDefinition;
-import org.livespark.formmodeler.model.impl.basic.selectors.RadioGroupFieldDefinition;
-import org.livespark.formmodeler.model.impl.relations.MultipleSubFormFieldDefinition;
-import org.livespark.formmodeler.model.impl.relations.SubFormFieldDefinition;
 import org.livespark.formmodeler.service.AbstractFieldManager;
 
+/**
+ * @author Pere Fernandez <pefernan@redhat.com>
+ */
 @ApplicationScoped
 public class ClientFieldManagerImpl extends AbstractFieldManager {
 
+    private Map<String, FieldProvider> fieldProviders = new HashMap<>();
+
     @PostConstruct
     protected void init() {
-        registerFieldDefinition( new TextBoxFieldDefinition() );
-        registerFieldDefinition( new TextAreaFieldDefinition() );
-        registerFieldDefinition( new CheckBoxFieldDefinition() );
-        registerFieldDefinition( new DateBoxFieldDefinition() );
-        registerFieldDefinition( new ListBoxFieldDefinition() );
-        registerFieldDefinition( new RadioGroupFieldDefinition() );
-        registerFieldDefinition( new SubFormFieldDefinition() );
-        registerFieldDefinition( new MultipleSubFormFieldDefinition() );
+        Collection<SyncBeanDef<FieldProvider>> providerDefs = IOC.getBeanManager().lookupBeans( FieldProvider.class );
+
+        for ( SyncBeanDef<FieldProvider> providerDef : providerDefs ) {
+            FieldProvider provider = providerDef.getInstance();
+            fieldProviders.put( provider.supportedFieldType(), provider );
+            registerFieldDefinition( provider.newInstance() );
+        }
     }
 
     @Override
     protected FieldDefinition createNewInstance(FieldDefinition definition) throws Exception {
         if ( definition == null ) return null;
 
-        if ( definition.getCode().equals( TextBoxFieldDefinition._CODE )) return new TextBoxFieldDefinition();
-        if ( definition.getCode().equals( TextAreaFieldDefinition._CODE )) return new TextAreaFieldDefinition();
-        if ( definition.getCode().equals( CheckBoxFieldDefinition._CODE )) return new CheckBoxFieldDefinition();
-        if ( definition.getCode().equals( DateBoxFieldDefinition._CODE )) return new DateBoxFieldDefinition();
-        if ( definition.getCode().equals( ListBoxFieldDefinition._CODE )) return new ListBoxFieldDefinition();
-        if ( definition.getCode().equals( RadioGroupFieldDefinition._CODE )) return new RadioGroupFieldDefinition();
-        if ( definition.getCode().equals( SubFormFieldDefinition._CODE )) return new SubFormFieldDefinition();
-        if ( definition.getCode().equals( MultipleSubFormFieldDefinition._CODE )) return new MultipleSubFormFieldDefinition();
+        FieldProvider provider = fieldProviders.get( definition.getCode() );
+
+        if ( provider != null ) {
+            return provider.newInstance();
+        }
 
         return null;
     }
