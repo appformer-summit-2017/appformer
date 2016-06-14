@@ -31,7 +31,7 @@ import org.livespark.formmodeler.renderer.service.FormRenderingContext;
 import org.uberfire.ext.layout.editor.api.editor.LayoutComponent;
 import org.uberfire.ext.layout.editor.client.components.LayoutDragComponent;
 import org.uberfire.ext.layout.editor.client.generator.AbstractLayoutGenerator;
-import org.uberfire.ext.layout.editor.client.util.DragTypeBeanResolver;
+import org.uberfire.ext.layout.editor.client.util.DragHelper;
 
 @Any
 @Dependent
@@ -40,7 +40,7 @@ public class FormLayoutGenerator extends AbstractLayoutGenerator {
     private List<FieldLayoutComponent> layoutComponents = new ArrayList<FieldLayoutComponent>();
 
     @Inject
-    private DragTypeBeanResolver dragTypeBeanResolver;
+    private DragHelper dragTypeBeanResolver;
 
     private FormRenderingContext renderingContext;
 
