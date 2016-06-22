@@ -28,10 +28,6 @@ import org.livespark.formmodeler.model.FieldDefinition;
 @Bindable
 public class IntegerSliderDefinition extends SliderBase<Integer> {
 
-    public static final String CODE = "IntSlider";
-
-    private String code = CODE;
-
     @FieldDef( label = "Min. Value" )
     protected Integer min;
 

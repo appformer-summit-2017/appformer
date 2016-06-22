@@ -42,18 +42,12 @@ public class DoubleSliderDefinition extends SliderBase<Double> {
 
     public static final String CODE = "Slider";
 
-    private String code = CODE;
-
     public DoubleSliderDefinition() {
+        super();
         min = new Double( 0.0 );
         max = new Double( 50.0 );
         precision = new Double( 1.0 );
         step =  new Double( 1.0 );
-    }
-
-    @Override
-    public String getCode() {
-        return code;
     }
 
     @Override

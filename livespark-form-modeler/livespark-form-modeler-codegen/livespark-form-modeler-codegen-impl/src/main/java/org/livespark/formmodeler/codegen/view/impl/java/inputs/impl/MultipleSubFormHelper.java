@@ -43,11 +43,15 @@ import static org.livespark.formmodeler.codegen.util.SourceGenerationUtil.*;
  */
 public class MultipleSubFormHelper extends AbstractNestedModelHelper<MultipleSubFormFieldDefinition> implements RequiresCustomCode<MultipleSubFormFieldDefinition> {
 
-    @Inject
     private DataObjectFinderService dataObjectFinderService;
 
-    @Inject
     private ColumnMetaGeneratorManager columnMetaGeneratorManager;
+
+    @Inject
+    public MultipleSubFormHelper( DataObjectFinderService dataObjectFinderService, ColumnMetaGeneratorManager columnMetaGeneratorManager ) {
+        this.dataObjectFinderService = dataObjectFinderService;
+        this.columnMetaGeneratorManager = columnMetaGeneratorManager;
+    }
 
     @Override
     public String getSupportedFieldTypeCode() {
