@@ -101,7 +101,7 @@ public class DynamicFormRendererTest extends TestCase {
     public void testBaseBinding() {
         doBind();
 
-        unBind();
+        clear();
     }
 
     @Test
@@ -117,7 +117,7 @@ public class DynamicFormRendererTest extends TestCase {
         verify( formHandler ).addFieldChangeHandler( any() );
         verify( formHandler, times(2) ).addFieldChangeHandler( anyString(), any() );
 
-        unBind();
+        clear();
     }
 
     protected void doBind() {
@@ -131,9 +131,12 @@ public class DynamicFormRendererTest extends TestCase {
         } );
     }
 
-    protected void unBind() {
+    protected void clear() {
         renderer.isValid();
-        renderer.unBind();
+        renderer.clear();
+
         verify( formHandler ).clear();
+        verify( view ).clear();
+
     }
 }

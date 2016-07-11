@@ -46,6 +46,8 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
         void bind();
 
         FieldLayoutComponent getFieldLayoutComponentForField( FieldDefinition field );
+
+        void clear();
     }
 
     private DynamicFormRendererView view;
@@ -136,7 +138,7 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
     }
 
     public void unBind() {
-        if ( isInitialized() ) {
+        if ( context != null && isInitialized() ) {
             for ( FieldDefinition field : context.getRootForm().getFields() ) {
                 if ( field instanceof SubFormFieldDefinition ) {
                     FieldLayoutComponent component = view.getFieldLayoutComponentForField( field );
@@ -159,6 +161,12 @@ public class DynamicFormRenderer implements IsWidget, IsFormView {
             return formHandler.getModel();
         }
         return null;
+    }
+
+    public void clear() {
+        view.clear();
+        unBind();
+        context = null;
     }
 
     public boolean isValid() {
