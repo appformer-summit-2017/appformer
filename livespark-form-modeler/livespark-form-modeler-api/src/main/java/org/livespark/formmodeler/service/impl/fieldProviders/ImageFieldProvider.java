@@ -19,35 +19,34 @@ package org.livespark.formmodeler.service.impl.fieldProviders;
 import javax.enterprise.context.Dependent;
 
 import org.livespark.formmodeler.model.FieldTypeInfo;
-import org.livespark.formmodeler.model.impl.basic.checkBox.CheckBoxFieldDefinition;
+import org.livespark.formmodeler.model.impl.basic.image.ImageFieldDefinition;
 
 @Dependent
-public class CheckBoxFieldProvider extends BasicTypeFieldProvider<CheckBoxFieldDefinition> {
+public class ImageFieldProvider extends BasicTypeFieldProvider<ImageFieldDefinition> {
 
     @Override
     public String getProviderCode() {
-        return CheckBoxFieldDefinition.CODE;
+        return ImageFieldDefinition.CODE;
     }
 
     @Override
     protected void doRegisterFields() {
-        registerPropertyType( Boolean.class );
-        registerPropertyType( boolean.class );
+        registerPropertyType( String.class );
     }
 
     @Override
     public int getPriority() {
-        return 3;
+        return 8;
     }
 
     @Override
-    public CheckBoxFieldDefinition createFieldByType( FieldTypeInfo typeInfo ) {
-        return new CheckBoxFieldDefinition();
+    public ImageFieldDefinition createFieldByType( FieldTypeInfo typeInfo ) {
+        return new ImageFieldDefinition();
     }
 
     @Override
-    public CheckBoxFieldDefinition getDefaultField() {
-        return new CheckBoxFieldDefinition();
+    public ImageFieldDefinition getDefaultField() {
+        return new ImageFieldDefinition();
     }
 
 }
