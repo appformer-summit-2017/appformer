@@ -19,14 +19,14 @@ package org.livespark.formmodeler.service.impl.fieldProviders;
 import javax.enterprise.context.Dependent;
 
 import org.livespark.formmodeler.model.FieldTypeInfo;
-import org.livespark.formmodeler.model.impl.basic.image.ImageFieldDefinition;
+import org.livespark.formmodeler.model.impl.basic.image.PictureFieldDefinition;
 
 @Dependent
-public class ImageFieldProvider extends BasicTypeFieldProvider<ImageFieldDefinition> {
+public class PictureFieldProvider extends BasicTypeFieldProvider<PictureFieldDefinition> {
 
     @Override
     public String getProviderCode() {
-        return ImageFieldDefinition.CODE;
+        return PictureFieldDefinition.CODE;
     }
 
     @Override
@@ -40,13 +40,13 @@ public class ImageFieldProvider extends BasicTypeFieldProvider<ImageFieldDefinit
     }
 
     @Override
-    public ImageFieldDefinition createFieldByType( FieldTypeInfo typeInfo ) {
-        return new ImageFieldDefinition();
+    public PictureFieldDefinition createFieldByType( FieldTypeInfo typeInfo ) {
+        return new PictureFieldDefinition();
     }
 
     @Override
-    public ImageFieldDefinition getDefaultField() {
-        return new ImageFieldDefinition();
+    public PictureFieldDefinition getDefaultField() {
+        return new PictureFieldDefinition();
     }
 
 }

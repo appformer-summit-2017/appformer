@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.renderer.client.rendering.renderers.image.widget;
+package org.livespark.formmodeler.rendering.client.widgets.image.widget;
 
 import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ui.shared.api.annotations.Bundle;

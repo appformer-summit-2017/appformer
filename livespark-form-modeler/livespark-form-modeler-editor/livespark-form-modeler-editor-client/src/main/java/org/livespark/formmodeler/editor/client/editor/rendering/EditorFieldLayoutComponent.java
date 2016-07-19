@@ -107,7 +107,6 @@ public class EditorFieldLayoutComponent extends FieldLayoutComponent<FormEditorR
 
             @Override
             public void onClose() {
-                renderContent();
                 showProperties = false;
                 if ( configContext != null) {
                     configContext.getComponentProperties().put( FORM_ID, formId );

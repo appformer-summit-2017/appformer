@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.renderer.client.rendering.renderers.image;
+package org.livespark.formmodeler.rendering.client.widgets.image;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -25,7 +25,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.ui.HasValue;
 import com.google.gwt.user.client.ui.SimplePanel;
-import org.livespark.formmodeler.renderer.client.rendering.renderers.image.widget.PictureWidget;
+import org.livespark.formmodeler.rendering.client.widgets.image.widget.PictureWidget;
 
 @Dependent
 public class PictureInput extends SimplePanel implements HasValue<String> {

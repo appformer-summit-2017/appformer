@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.renderer.client.rendering.renderers.image.widget;
+package org.livespark.formmodeler.rendering.client.widgets.image.widget;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
@@ -142,6 +142,17 @@ public class PictureWidgetViewImpl extends Composite implements PictureWidget.Pi
         if ( !pictureUrl.equals( url ) ) {
             pictureUrl = url;
             initDisplay();
+        }
+    }
+
+    @Override
+    public void setReadOnly( boolean readOnly ) {
+        if ( readOnly ) {
+            takePicture.setVisible( false );
+            takeAnotherPicture.setVisible( false );
+        } else {
+            takePicture.setVisible( true );
+            takeAnotherPicture.setVisible( true );
         }
     }
 

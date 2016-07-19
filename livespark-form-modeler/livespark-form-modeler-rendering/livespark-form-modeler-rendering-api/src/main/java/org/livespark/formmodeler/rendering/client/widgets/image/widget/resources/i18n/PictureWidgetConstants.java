@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.model.impl.basic.image;
+package org.livespark.formmodeler.rendering.client.widgets.image.widget.resources.i18n;
 
-import org.jboss.errai.common.client.api.annotations.Portable;
-import org.jboss.errai.databinding.client.api.Bindable;
-import org.livespark.formmodeler.model.FieldDefinition;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.i18n.client.Messages;
 
-@Portable
-@Bindable
-public class ImageFieldDefinition extends FieldDefinition {
+public interface PictureWidgetConstants extends Messages {
+    public static final PictureWidgetConstants INSTANCE = GWT.create( PictureWidgetConstants.class );
 
-    public static final String CODE = "Image";
+    public String takePicture();
 
-    public ImageFieldDefinition() {
-        super( CODE );
-    }
-
-    @Override
-    protected void doCopyFrom( FieldDefinition other ) {
-
-    }
+    public String newPicture();
 }

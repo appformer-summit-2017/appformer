@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.renderer.client.rendering.renderers.image.widget;
+package org.livespark.formmodeler.rendering.client.widgets.image.widget;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.CanvasElement;
@@ -39,7 +39,7 @@ public class PictureWidgetDriver extends JavaScriptObject {
         this.height = height;
 
         if ( this.streaming ) {
-            @org.livespark.formmodeler.renderer.client.rendering.renderers.image.widget.PictureWidgetDriver::stopStreaming(*)(this);
+            @org.livespark.formmodeler.rendering.client.widgets.image.widget.PictureWidgetDriver::stopStreaming(*)(this);
         }
 
         var settings = {
@@ -118,21 +118,25 @@ public class PictureWidgetDriver extends JavaScriptObject {
 
             var data = this.canvas.toDataURL('image/png');
 
-            @org.livespark.formmodeler.renderer.client.rendering.renderers.image.widget.PictureWidgetDriver::stopStreaming(*)(this);
+            @org.livespark.formmodeler.rendering.client.widgets.image.widget.PictureWidgetDriver::stopStreaming(*)(this);
 
             return data;
         }
     }-*/;
 
     public static final void stopStreaming( PictureWidgetDriver driver ) {
-        driver.doStopStreaming();
+        if ( driver != null ) {
+            driver.doStopStreaming();
+        }
     }
 
     public final native void doStopStreaming() /*-{
         try {
             this.streaming = false;
-            this.video.pause();
-            this.video.src = null;
+            if (this.video) {
+                this.video.pause();
+                this.video.src = null;
+            }
             if ( this.stream != null ) {
                 this.stream.getTracks().forEach( function( track ) {
                     track.stop()

@@ -14,15 +14,32 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.renderer.client.rendering.renderers.image.widget.resources.i18n;
+package org.livespark.formmodeler.model.impl.basic.image;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.Messages;
+import org.jboss.errai.common.client.api.annotations.Portable;
 
-public interface PictureWidgetConstants extends Messages {
-    public static final PictureWidgetConstants INSTANCE = GWT.create( PictureWidgetConstants.class );
+@Portable
+public enum PictureSize {
+    SMALL(320, 240), MEDIUM(640, 480);
 
-    public String takePicture();
+    private int width;
+    private int height;
 
-    public String newPicture();
+    PictureSize( int width, int height ) {
+        this.width = width;
+        this.height = height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    @Override
+    public String toString() {
+        return width + "X" + height;
+    }
 }

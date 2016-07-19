@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.livespark.formmodeler.renderer.client.rendering.renderers.image.widget;
+package org.livespark.formmodeler.rendering.client.widgets.image.widget;
 
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
@@ -31,6 +31,8 @@ public class PictureWidget implements IsWidget {
         String getPictureUrl();
 
         void setPictureUrl( String url );
+
+        void setReadOnly( boolean readOnly );
     }
 
     private PictureWidgetView view;
@@ -51,6 +53,10 @@ public class PictureWidget implements IsWidget {
 
     public void setPictureUrl( String url ) {
         view.setPictureUrl( url );
+    }
+
+    public void setReadOnly( boolean readOnly ) {
+        view.setReadOnly( readOnly );
     }
 
     public interface TakePictureCallback {

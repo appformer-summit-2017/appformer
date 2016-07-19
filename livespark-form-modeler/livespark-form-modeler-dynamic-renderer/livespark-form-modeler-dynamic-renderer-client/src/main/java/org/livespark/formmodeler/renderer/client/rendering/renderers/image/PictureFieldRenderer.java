@@ -20,11 +20,12 @@ import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
 import com.google.gwt.user.client.ui.IsWidget;
-import org.livespark.formmodeler.model.impl.basic.image.ImageFieldDefinition;
+import org.livespark.formmodeler.model.impl.basic.image.PictureFieldDefinition;
 import org.livespark.formmodeler.renderer.client.rendering.FieldRenderer;
+import org.livespark.formmodeler.rendering.client.widgets.image.PictureInput;
 
 @Dependent
-public class PictureFieldRenderer extends FieldRenderer<ImageFieldDefinition> {
+public class PictureFieldRenderer extends FieldRenderer<PictureFieldDefinition> {
 
     private PictureInput pictureInput;
 
@@ -35,12 +36,12 @@ public class PictureFieldRenderer extends FieldRenderer<ImageFieldDefinition> {
 
     @Override
     public String getName() {
-        return ImageFieldDefinition.CODE;
+        return PictureFieldDefinition.CODE;
     }
 
     @Override
     public void initInputWidget() {
-        pictureInput.init( 320, 240 );
+        pictureInput.init( field.getSize().getWidth(), field.getSize().getHeight() );
     }
 
     @Override
@@ -50,6 +51,6 @@ public class PictureFieldRenderer extends FieldRenderer<ImageFieldDefinition> {
 
     @Override
     public String getSupportedCode() {
-        return ImageFieldDefinition.CODE;
+        return PictureFieldDefinition.CODE;
     }
 }
