@@ -177,6 +177,7 @@ public class CrudComponent implements IsWidget{
 
     public void doCancel() {
         restoreTable();
+        refresh();
     }
 
     public void showCreateForm() {

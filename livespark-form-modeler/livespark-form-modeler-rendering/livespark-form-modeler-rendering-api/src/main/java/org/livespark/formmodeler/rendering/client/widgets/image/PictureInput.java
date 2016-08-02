@@ -86,6 +86,10 @@ public class PictureInput extends SimplePanel implements HasValue<String> {
         }
     }
 
+    public void setReadOnly( boolean readOnly ) {
+        widget.setReadOnly( readOnly );
+    }
+
     @Override
     public HandlerRegistration addValueChangeHandler( ValueChangeHandler<String> valueChangeHandler ) {
         return this.addHandler( valueChangeHandler, ValueChangeEvent.getType() );

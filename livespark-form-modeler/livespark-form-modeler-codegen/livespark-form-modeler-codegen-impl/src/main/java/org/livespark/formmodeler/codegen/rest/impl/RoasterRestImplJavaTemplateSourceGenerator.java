@@ -169,9 +169,8 @@ public class RoasterRestImplJavaTemplateSourceGenerator extends RoasterRestJavaT
     private void setCreateMethodBody( SourceGenerationContext context,
                                       MethodSource<JavaClassSource> create ) {
         StringBuilder body = new StringBuilder();
-        body.append( ENTITY_SERVICE )
-            .append( ".create( model );" )
-            .append( "return model;" );
+        body.append( "return " ).append( ENTITY_SERVICE )
+            .append( ".create( model );" );
 
         create.setBody( body.toString() );
     }

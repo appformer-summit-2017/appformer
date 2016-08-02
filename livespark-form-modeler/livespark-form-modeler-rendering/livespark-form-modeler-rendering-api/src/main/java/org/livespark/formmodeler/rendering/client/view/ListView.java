@@ -22,6 +22,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import org.jboss.errai.common.client.api.RemoteCallback;
+import org.jboss.errai.databinding.client.BindableProxy;
+import org.jboss.errai.databinding.client.BindableProxyFactory;
 import org.jboss.errai.ioc.client.container.SyncBeanDef;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.jboss.errai.ui.shared.api.annotations.DataField;
@@ -133,6 +135,9 @@ public abstract class ListView<M, F extends FormModel> extends Composite {
     public abstract F createFormModel( M model );
 
     protected class ListViewCrudActionsHelper implements CrudActionsHelper {
+
+        private Integer editedIndex = -1;
+
         @Override
         public boolean showEmbeddedForms() {
             return false;
@@ -188,8 +193,12 @@ public abstract class ListView<M, F extends FormModel> extends Composite {
 
         @Override
         public IsFormView getEditInstanceForm( final Integer index ) {
+            editedIndex = index;
             currentForm = getForm();
-            currentForm.setModel( createFormModel( crudItems.get( index ) ) );
+
+            BindableProxy<M> proxy = (BindableProxy<M>) BindableProxyFactory.getBindableProxy( crudItems.get( index ) );
+
+            currentForm.setModel( createFormModel( proxy.deepUnwrap() ) );
             return currentForm;
         }
 
@@ -199,6 +208,8 @@ public abstract class ListView<M, F extends FormModel> extends Composite {
                     new RemoteCallback<Boolean>() {
                         @Override
                         public void callback( final Boolean response ) {
+                            if ( editedIndex == -1 ) return;
+                            crudItems.set( editedIndex, getModel( currentForm.getModel() ) );
                             crudComponent.refresh();
                         }
                     } ).update( getModel( currentForm.getModel() ) );

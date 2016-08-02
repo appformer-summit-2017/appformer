@@ -119,6 +119,7 @@ public class CrudComponentViewImpl extends Composite implements CrudComponent.Cr
         final List<ColumnMeta> columns = new ArrayList<>( dataColumns );
         table.addColumns( columns );
         content.add( table );
+        table.refresh();
     }
 
     @Override

@@ -36,8 +36,8 @@ public abstract class BaseEntityService {
         builder = em.getCriteriaBuilder();
     }
 
-    public <E> void create( E entity ) {
-        em.merge( entity );
+    public <E> E create( E entity ) {
+        return em.merge( entity );
     }
 
     // TODO this should use an identifier

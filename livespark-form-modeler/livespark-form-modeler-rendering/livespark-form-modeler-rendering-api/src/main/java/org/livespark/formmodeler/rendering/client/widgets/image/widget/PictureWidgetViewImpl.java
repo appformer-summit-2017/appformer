@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.Dependent;
 import javax.inject.Inject;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.CanvasElement;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.dom.client.Element;
@@ -135,6 +136,12 @@ public class PictureWidgetViewImpl extends Composite implements PictureWidget.Pi
     }
 
     public void setPictureUrl( String url ) {
+
+        if ( driver == null ) {
+            GWT.log( "Cannot use component while it isn't initialized. Run the init method before set the value " );
+            return;
+        }
+
         if ( url == null ) {
             url = "";
         }
