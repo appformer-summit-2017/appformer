@@ -19,93 +19,135 @@ package org.livespark.backend.dashbuilder;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.UUID;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.spi.Context;
 import javax.enterprise.event.Observes;
+import javax.inject.Inject;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.persistence.metamodel.EntityType;
 import javax.sql.DataSource;
 
+import com.googlecode.gwt.crypto.util.Sys;
+import org.apache.commons.lang3.StringUtils;
 import org.dashbuilder.DataSetCore;
 import org.dashbuilder.dataprovider.DataSetProviderRegistry;
 import org.dashbuilder.dataprovider.DataSetProviderType;
 import org.dashbuilder.dataset.def.DataSetDefRegistry;
 import org.dashbuilder.dataset.def.SQLDataSetDef;
+import org.kie.workbench.common.screens.datamodeller.model.persistence.PersistenceDescriptorModel;
+import org.kie.workbench.common.screens.datamodeller.model.persistence.PersistenceUnitModel;
+import org.kie.workbench.common.screens.datamodeller.service.PersistenceDescriptorService;
 import org.livespark.client.shared.AppReady;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class DasbuilderTest {
 
+    private static final Logger logger = LoggerFactory.getLogger( DasbuilderTest.class );
+
+    private PersistenceDescriptorService persistenceDescriptorService;
+
+    @Inject
+    public DasbuilderTest( PersistenceDescriptorService persistenceDescriptorService ) {
+        this.persistenceDescriptorService = persistenceDescriptorService;
+    }
 
     public void onDeploy( @Observes AppReady event ) {
-        new Timer(  ).schedule( new TimerTask() {
+        new Timer().schedule( new TimerTask() {
             @Override
             public void run() {
+
+                PersistenceDescriptorModel persistenceDescriptor = persistenceDescriptorService.load( event.getProject() );
+
+                if ( persistenceDescriptor == null ) {
+                    throw new IllegalArgumentException( "Unable to get Persistence Descriptor for project" );
+                }
+
+                PersistenceUnitModel persistenceUnit = persistenceDescriptor.getPersistenceUnit();
+
+                if ( persistenceUnit == null ) {
+                    throw new IllegalArgumentException( "Unable to get Persistence Unit for project" );
+                }
+
+                String dataSourceName = persistenceUnit.getJtaDataSource();
+
+                if ( StringUtils.isEmpty( dataSourceName ) ) {
+                    dataSourceName = persistenceUnit.getNonJtaDataSource();
+                }
+
+                if ( StringUtils.isEmpty( dataSourceName )) {
+                    throw new IllegalArgumentException( "Unable to load DataSource for project" );
+                }
+
                 DataSetProviderRegistry dataSetProviderRegistry = DataSetCore.get().getDataSetProviderRegistry();
 
-
                 DataSetProviderType type = dataSetProviderRegistry.getProviderTypeByName( "SQL" );
+
                 if ( type == null ) {
                     throw new IllegalArgumentException( "Provider not supported: SQL" );
                 }
 
-                EntityManager entityManager = null;
+                List<String> entityNames = new ArrayList<String>();
+
+                for ( String className : persistenceUnit.getClasses() ) {
+                    if ( className.contains( "." )) {
+                        className = className.substring( className.lastIndexOf( "." ) + 1 );
+                    }
+                    entityNames.add( className.toUpperCase() );
+                }
+
+                String projectName = event.getProject().getPom().getGav().toString();
+
                 try {
 
-                    DataSource dataSource = (DataSource) new InitialContext().lookup( "java:jboss/datasources/ExampleDS" );
+                    DataSource dataSource = (DataSource) new InitialContext().lookup( dataSourceName );
 
                     Connection connection = dataSource.getConnection( "sa", "sa" );
 
                     String[] types = {"TABLE"};
-                    ResultSet rs = connection.getMetaData().getTables(null, null, "%", types);
+                    ResultSet rs = connection.getMetaData().getTables( null, null, "%", types );
 
                     DataSetDefRegistry registry = DataSetCore.get().getDataSetDefRegistry();
-                    while (rs.next()) {
-                        String tableName = rs.getString("TABLE_NAME");
+                    while ( rs.next() ) {
+                        String tableName = rs.getString( "TABLE_NAME" );
 
-                        if ( tableName.contains( "_" ) || registry.getDataSetDef( tableName ) != null ) {
+                        if ( !entityNames.contains( tableName.toUpperCase() ) ) {
                             continue;
                         }
 
                         SQLDataSetDef dataSetDef = (SQLDataSetDef) type.createDataSetDef();
-                        dataSetDef.setDataSource( "java:jboss/datasources/ExampleDS" );
+                        dataSetDef.setDataSource( dataSourceName );
                         dataSetDef.setDbTable( tableName );
 
-                        dataSetDef.setUUID( tableName );
-                        dataSetDef.setName( tableName );
+                        String name = projectName + " - " + tableName;
 
+                        dataSetDef.setUUID( UUID.randomUUID().toString() );
+                        dataSetDef.setName( name );
 
                         registry.registerDataSetDef( dataSetDef );
-                        System.out.println( "Deployed DataSet for '" + tableName + "'");
+                        logger.info( "Deployed DataSet '{}' for table '{}'", name, tableName );
                     }
-                } catch ( NamingException e ) {
-                    e.printStackTrace();
-                } catch ( SQLException e ) {
-                    e.printStackTrace();
-                }
-
-                if ( entityManager == null) {
-                    return;
-                }
-
-                for ( EntityType<?> entity : entityManager.getEntityManagerFactory().getMetamodel().getEntities() ) {
-                    System.out.println( entity.getName() );
-                    System.out.println( entity.getJavaType().getName() );
-                    SQLDataSetDef dataSetDef = (SQLDataSetDef) type.createDataSetDef();
-                    dataSetDef.setDataSource( "java:jboss/datasources/ExampleDS" );
-                    //dataSetDef.setDbTable(  );
-                    DataSetCore.get().getDataSetDefRegistry().registerDataSetDef( dataSetDef );
+                } catch ( Exception e ) {
+                    logger.error( "Error creating DataSets for project '{}'", projectName, e );
                 }
             }
         }, 120 * 1000 );
 
 
+    }
 
+    public static void main(String[] args ) {
+        String className = "org.class.LiveSpark";
+
+        System.out.println( className.substring( className.lastIndexOf( "." ) + 1 ));
+
+        String gav = "org.jbpm:jbpm:1.0";
+
+        System.out.println( gav.replaceAll( ":", "-" ));
     }
 }
