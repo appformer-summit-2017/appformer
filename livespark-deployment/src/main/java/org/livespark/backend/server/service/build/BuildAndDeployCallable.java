@@ -176,7 +176,7 @@ public class BuildAndDeployCallable extends BaseBuildCallable implements HttpSes
             sreq.getServerPort() + "/" +
             war.getName().replace( ".war", "" );
 
-        appReadyEvent.fire( new AppReady( url ) );
+        appReadyEvent.fire( new AppReady( url, project ) );
     }
 
     @Override

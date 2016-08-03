@@ -30,6 +30,7 @@ import static org.mockito.Mockito.verify;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.guvnor.common.services.project.model.Project;
 import org.guvnor.common.services.shared.config.AppConfigService;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.junit.Before;
@@ -146,7 +147,7 @@ public class LiveSparkEntryPointTest {
 
     @Test
     public void onAppReady() {
-        liveSparkEntryPoint.onAppReady( new AppReady( "url" ) );
+        liveSparkEntryPoint.onAppReady( new AppReady( "url", mock( Project.class ) ) );
 
         verify( placeManager ).goTo( any( PlaceRequest.class ) );
     }

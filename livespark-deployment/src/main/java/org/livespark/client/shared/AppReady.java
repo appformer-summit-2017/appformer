@@ -16,6 +16,7 @@
 
 package org.livespark.client.shared;
 
+import org.guvnor.common.services.project.model.Project;
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
 
@@ -23,14 +24,18 @@ import org.jboss.errai.common.client.api.annotations.Portable;
 public class AppReady {
 
 	final String url;
+	final Project project;
 
-	public AppReady(@MapsTo("url") String url) {
+	public AppReady( @MapsTo( "url" ) String url, @MapsTo( "project" ) Project project ) {
 		this.url = url;
+		this.project = project;
 	}
 
 	public String getUrl() {
 		return url;
 	}
-	
-	
+
+	public Project getProject() {
+		return project;
+	}
 }
