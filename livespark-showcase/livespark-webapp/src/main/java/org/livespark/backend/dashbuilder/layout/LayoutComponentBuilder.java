@@ -22,20 +22,20 @@ import org.uberfire.ext.layout.editor.api.editor.LayoutComponent;
 
 public abstract class LayoutComponentBuilder<T> {
 
-    protected T settings;
+    protected T component;
 
-    public LayoutComponentBuilder( T settings ) {
-        this.settings = settings;
+    public LayoutComponentBuilder( T component ) {
+        this.component = component;
     }
 
     public LayoutComponent getLayoutComponent() {
         LayoutComponent layoutComponent = new LayoutComponent( getLayoutComponentClassName() );
-        layoutComponent.addProperties( getComponentSettings( settings ) );
+        layoutComponent.addProperties( getComponentSettings( component ) );
         return layoutComponent;
     }
 
     protected abstract String getLayoutComponentClassName();
 
-    protected abstract Map<String, String> getComponentSettings( T settings );
+    protected abstract Map<String, String> getComponentSettings( T component );
 
 }

@@ -179,7 +179,7 @@ public class BuildAndDeployCallable extends BaseBuildCallable implements HttpSes
 
 
 
-        liveSparkAppBuilder.buildAndpublishLiveSparkApp( app, project );
+
     }
 
     @Override
