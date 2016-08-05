@@ -25,12 +25,10 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.guvnor.common.services.shared.config.AppConfigService;
-import org.jboss.errai.common.client.api.Assert;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
-import org.jboss.errai.marshalling.client.Marshalling;
 import org.kie.workbench.common.screens.search.client.menu.SearchMenuBuilder;
 import org.kie.workbench.common.screens.social.hp.config.SocialConfigurationService;
 import org.kie.workbench.common.services.shared.service.PlaceManagerActivityService;
@@ -52,6 +50,8 @@ import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
 import org.uberfire.workbench.model.menu.MenuItem;
 import org.uberfire.workbench.model.menu.Menus;
+
+import static org.kie.workbench.common.workbench.client.PerspectiveIds.*;
 
 @EntryPoint
 public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
@@ -138,7 +138,7 @@ public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
                                         socialEnabled ) ).endMenu()
                                         .newTopLevelMenu( constants.authoring() ).withItems( menusHelper.getAuthoringViews() ).endMenu()
                                         .newTopLevelMenu( constants.deploy() ).withItems( getDeploymentViews() ).endMenu()
-                                        .newTopLevelMenu( constants.extensions() ).withItems( menusHelper.getExtensionsViews() ).endMenu()
+                                        .newTopLevelMenu( constants.extensions() ).withItems( getExtensionsViews() ).endMenu()
                                         .newTopLevelCustomMenu( iocManager.lookupBean( SearchMenuBuilder.class ).getInstance() ).endMenu()
                                         .newTopLevelMenu( "Deployed Apps" ).withItems( getLiveSparkDeployedApps( deployedApps ) ).endMenu().build();
                             } else {
@@ -196,6 +196,24 @@ public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
     private void refreshMenus() {
 
         setupMenu();
+    }
+
+    protected List<? extends MenuItem> getExtensionsViews() {
+
+        //the data source management perspective is not yet added to the platform by default extensions
+        //to be sure we don't interfere in other workbenches. So it's basically added here.
+        final List<MenuItem> result = new ArrayList<>();
+
+        result.addAll( menusHelper.getExtensionsViews() );
+
+        result.add( MenuFactory.newSimpleItem( constants.dataSourceManagement() )
+                            .place( new DefaultPlaceRequest( DATASOURCE_MANAGEMENT ) )
+                            .endMenu()
+                            .build()
+                            .getItems()
+                            .get( 0 ) );
+
+        return result;
     }
 
     protected List<MenuItem> getDeploymentViews() {
