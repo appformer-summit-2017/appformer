@@ -18,11 +18,9 @@ package org.livespark.backend.server.service.build;
 
 import java.io.File;
 import java.util.Set;
-
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedExecutorService;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,7 +28,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.mina.util.ConcurrentHashSet;
 import org.guvnor.common.services.project.model.Project;
 import org.jboss.errai.bus.server.api.ServerMessageBus;
-import org.livespark.client.shared.AppReady;
 
 @ApplicationScoped
 public class BuildCallableFactory {
@@ -43,10 +40,10 @@ public class BuildCallableFactory {
     private static final int CODE_SERVER_HIGHEST_PORT = 50100;
 
     @Inject
-    private Event<AppReady> appReadyEvent;
+    private ServerMessageBus bus;
 
     @Inject
-    private ServerMessageBus bus;
+    private LiveSparkAppBuilder liveSparkAppBuilder;
 
     @Resource
     private ManagedExecutorService execService;
@@ -66,7 +63,7 @@ public class BuildCallableFactory {
                                                    queueSessionId,
                                                    sreq,
                                                    bus,
-                                                   appReadyEvent );
+                                                   liveSparkAppBuilder );
             session.setAttribute( BUILD_AND_DEPLOY_CALLABLE_ATTR_KEY, callable );
         }
 
@@ -86,9 +83,9 @@ public class BuildCallableFactory {
                                                                  queueSessionId,
                                                                  sreq,
                                                                  bus,
-                                                                 appReadyEvent,
                                                                  getAvailableCodeServerPort(),
-                                                                 execService );
+                                                                 execService,
+                                                                 liveSparkAppBuilder );
             session.setAttribute( CODE_SERVER_CALLABLE_ATTR_KEY, callable );
         }
 

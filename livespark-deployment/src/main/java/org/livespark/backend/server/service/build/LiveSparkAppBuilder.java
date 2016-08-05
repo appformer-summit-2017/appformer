@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 JBoss Inc
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-package org.livespark.client.shared;
+package org.livespark.backend.server.service.build;
 
-import org.jboss.errai.common.client.api.annotations.MapsTo;
-import org.jboss.errai.common.client.api.annotations.Portable;
+import org.guvnor.common.services.project.model.Project;
+import org.livespark.client.shared.LiveSparkApp;
 
-@Portable
-public class AppReady {
-
-	final LiveSparkApp app;
-
-	public AppReady( @MapsTo( "app" ) LiveSparkApp app ) {
-		this.app = app;
-	}
-
-	public LiveSparkApp getApp() {
-		return app;
-	}
+public interface LiveSparkAppBuilder {
+    void buildAndpublishLiveSparkApp( LiveSparkApp app, Project project );
 }

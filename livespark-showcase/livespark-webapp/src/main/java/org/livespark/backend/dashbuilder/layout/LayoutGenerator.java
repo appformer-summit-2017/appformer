@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 JBoss Inc
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package org.livespark.client.shared;
+package org.livespark.backend.dashbuilder.layout;
 
-import org.jboss.errai.common.client.api.annotations.MapsTo;
-import org.jboss.errai.common.client.api.annotations.Portable;
+import java.util.List;
 
-@Portable
-public class AppReady {
+import org.dashbuilder.displayer.DisplayerSettings;
+import org.livespark.client.shared.LiveSparkApp;
 
-	final LiveSparkApp app;
+public class LayoutGenerator {
+    public static void generateLayout( LiveSparkApp app, List<DisplayerSettings> displayersSettingss ) {
 
-	public AppReady( @MapsTo( "app" ) LiveSparkApp app ) {
-		this.app = app;
-	}
-
-	public LiveSparkApp getApp() {
-		return app;
-	}
+    }
 }

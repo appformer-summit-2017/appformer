@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 JBoss Inc
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,32 @@ package org.livespark.client.shared;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.uberfire.ext.layout.editor.api.editor.LayoutTemplate;
 
 @Portable
-public class AppReady {
+public class LiveSparkAppPage {
+    private String name;
 
-	final LiveSparkApp app;
+    private LayoutTemplate template;
 
-	public AppReady( @MapsTo( "app" ) LiveSparkApp app ) {
-		this.app = app;
-	}
+    public LiveSparkAppPage( @MapsTo( "name" ) String name, @MapsTo( "template" ) LayoutTemplate template ) {
+        this.name = name;
+        this.template = template;
+    }
 
-	public LiveSparkApp getApp() {
-		return app;
-	}
+    public String getName() {
+        return name;
+    }
+
+    public void setName( String name ) {
+        this.name = name;
+    }
+
+    public LayoutTemplate getTemplate() {
+        return template;
+    }
+
+    public void setTemplate( LayoutTemplate template ) {
+        this.template = template;
+    }
 }

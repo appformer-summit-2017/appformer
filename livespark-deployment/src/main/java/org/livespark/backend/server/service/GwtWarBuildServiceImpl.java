@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.enterprise.concurrent.ManagedExecutorService;
@@ -250,6 +249,8 @@ public class GwtWarBuildServiceImpl extends BuildServiceImpl implements GwtWarBu
                                 return callableFactory.createProductionDeploymentCallable( project, pomXml, session, queueSessionId, sreq );
                             }
                         } );
+
+
             }
         }.run();
     }

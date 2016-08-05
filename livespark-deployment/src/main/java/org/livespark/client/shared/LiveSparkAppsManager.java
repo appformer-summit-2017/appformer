@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 JBoss Inc
+ * Copyright 2016 Red Hat, Inc. and/or its affiliates.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,15 @@
 
 package org.livespark.client.shared;
 
-import org.jboss.errai.common.client.api.annotations.MapsTo;
-import org.jboss.errai.common.client.api.annotations.Portable;
+import java.util.List;
 
-@Portable
-public class AppReady {
+import org.jboss.errai.bus.server.annotations.Remote;
 
-	final LiveSparkApp app;
+@Remote
+public interface LiveSparkAppsManager {
 
-	public AppReady( @MapsTo( "app" ) LiveSparkApp app ) {
-		this.app = app;
-	}
+    List<LiveSparkApp> getRegisteredApps();
 
-	public LiveSparkApp getApp() {
-		return app;
-	}
+    void registerApp( LiveSparkApp liveSparkApp );
+
 }

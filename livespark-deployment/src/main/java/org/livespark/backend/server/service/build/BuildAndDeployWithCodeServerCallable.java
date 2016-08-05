@@ -21,8 +21,6 @@ import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-
-import javax.enterprise.event.Event;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -35,7 +33,6 @@ import org.apache.maven.shared.invoker.InvocationResult;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.guvnor.common.services.project.model.Project;
 import org.jboss.errai.bus.server.api.ServerMessageBus;
-import org.livespark.client.shared.AppReady;
 
 public class BuildAndDeployWithCodeServerCallable extends BuildAndDeployCallable {
 
@@ -53,10 +50,10 @@ public class BuildAndDeployWithCodeServerCallable extends BuildAndDeployCallable
                                           String queueSessionId,
                                           ServletRequest sreq,
                                           ServerMessageBus bus,
-                                          Event<AppReady> appReadyEvent,
                                           CodeServerPortHandle codeServerPort,
-                                          ExecutorService execService ) {
-        super( project, pomXml, session, queueSessionId, sreq, bus, appReadyEvent );
+                                          ExecutorService execService,
+                                          LiveSparkAppBuilder liveSparkAppBuilder ) {
+        super( project, pomXml, session, queueSessionId, sreq, bus, liveSparkAppBuilder );
         this.codeServerPort = codeServerPort;
         this.execService = execService;
     }

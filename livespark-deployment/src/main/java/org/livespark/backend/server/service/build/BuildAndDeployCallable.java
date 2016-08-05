@@ -26,8 +26,6 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.enterprise.event.Event;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -43,11 +41,10 @@ import org.apache.maven.shared.invoker.InvocationResult;
 import org.guvnor.common.services.project.builder.model.BuildMessage;
 import org.guvnor.common.services.project.model.Project;
 import org.jboss.errai.bus.server.api.ServerMessageBus;
-import org.livespark.client.shared.AppReady;
+import org.livespark.client.shared.LiveSparkApp;
 
 public class BuildAndDeployCallable extends BaseBuildCallable implements HttpSessionBindingListener {
 
-    private final Event<AppReady> appReadyEvent;
     protected final HttpSession session;
     private final Set<File> deployedWars = new LinkedHashSet<>();
 
@@ -57,10 +54,9 @@ public class BuildAndDeployCallable extends BaseBuildCallable implements HttpSes
                             String queueSessionId,
                             ServletRequest sreq,
                             ServerMessageBus bus,
-                            Event<AppReady> appReadyEvent ) {
-        super( project, pomXml, queueSessionId, sreq, bus );
+                            LiveSparkAppBuilder liveSparkAppBuilder ) {
+        super( project, pomXml, queueSessionId, sreq, bus, liveSparkAppBuilder );
         this.session = session;
-        this.appReadyEvent = appReadyEvent;
     }
 
     @Override
@@ -113,12 +109,12 @@ public class BuildAndDeployCallable extends BaseBuildCallable implements HttpSes
 
             @Override
             public void onFileCreate( final File file ) {
-                fireAppReadyEvent( destination, sreq );
+                buildLiveSparkApp( destination, sreq );
             }
 
             @Override
             public void onFileChange(final File file) {
-                fireAppReadyEvent( destination, sreq );
+                buildLiveSparkApp( destination, sreq );
             }
         } );
         monitor.addObserver( observer );
@@ -170,13 +166,20 @@ public class BuildAndDeployCallable extends BaseBuildCallable implements HttpSes
         return deployDir;
     }
 
-    private void fireAppReadyEvent(File war, ServletRequest sreq) {
+    private void buildLiveSparkApp( File war, ServletRequest sreq ) {
         final String url = "http://" +
             sreq.getServerName() + ":" +
             sreq.getServerPort() + "/" +
             war.getName().replace( ".war", "" );
 
-        appReadyEvent.fire( new AppReady( url ) );
+        final LiveSparkApp app = new LiveSparkApp( project.getProjectName(),
+                                             project.getPom().getGav().toString(),
+                                             project.getPom().getGav().getVersion(),
+                                             url );
+
+
+
+
     }
 
     @Override

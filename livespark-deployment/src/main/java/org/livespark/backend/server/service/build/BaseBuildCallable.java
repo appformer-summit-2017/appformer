@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 
@@ -44,8 +43,10 @@ public abstract class BaseBuildCallable implements BuildCallable {
 
     private static final Logger logger = LoggerFactory.getLogger( BaseBuildCallable.class );
     private static final String LOG_BUILD_OUTPUT_PROPERTY = "livespark.log_build_output";
-    private static final boolean logBuildOutput = Boolean.valueOf( System.getProperty( LOG_BUILD_OUTPUT_PROPERTY, "false" ) );
-    private static final Optional<String> ALT_LOCAL_MVN_REPO = Optional.ofNullable( System.getProperty( "maven.repo.local" ) );
+    private static final boolean logBuildOutput = Boolean.valueOf( System.getProperty( LOG_BUILD_OUTPUT_PROPERTY,
+                                                                                       "false" ) );
+    private static final Optional<String> ALT_LOCAL_MVN_REPO = Optional.ofNullable( System.getProperty(
+            "maven.repo.local" ) );
 
     protected final Project project;
     protected final File pomXml;
@@ -54,17 +55,21 @@ public abstract class BaseBuildCallable implements BuildCallable {
     protected final String queueSessionId;
     protected final OutputHandler outputHandler;
 
+    protected final LiveSparkAppBuilder liveSparkAppBuilder;
+
 
     BaseBuildCallable( Project project,
                        File pomXml,
                        String queueSessionId,
                        ServletRequest sreq,
-                       ServerMessageBus bus ) {
+                       ServerMessageBus bus,
+                       LiveSparkAppBuilder liveSparkAppBuilder ) {
         this.project = project;
         this.pomXml = pomXml;
         this.queueSessionId = queueSessionId;
         this.sreq = sreq;
         this.bus = bus;
+        this.liveSparkAppBuilder = liveSparkAppBuilder;
 
         OutputHandler outputHandler = new ClientOutputHandler( bus, queueSessionId );
         if ( logBuildOutput ) {
@@ -151,18 +156,18 @@ public abstract class BaseBuildCallable implements BuildCallable {
 
     protected void maybeSetLocalRepo( final DefaultInvocationRequest request ) {
         ALT_LOCAL_MVN_REPO
-            .filter( path -> !path.isEmpty() )
-            .map( path -> new File(path) )
-            .ifPresent( repo -> request.setLocalRepositoryDirectory( repo ) );
+                .filter( path -> !path.isEmpty() )
+                .map( path -> new File( path ) )
+                .ifPresent( repo -> request.setLocalRepositoryDirectory( repo ) );
     }
 
     private void cleanClientConsole() {
         MessageBuilder.createMessage()
-                      .toSubject( "MavenBuilderOutput" )
-                      .signalling()
-                      .with( MessageParts.SessionID, queueSessionId )
-                      .with( "clean", Boolean.TRUE )
-                      .noErrorHandling().sendNowWith( bus );
+                .toSubject( "MavenBuilderOutput" )
+                .signalling()
+                .with( MessageParts.SessionID, queueSessionId )
+                .with( "clean", Boolean.TRUE )
+                .noErrorHandling().sendNowWith( bus );
     }
 
     protected String getWildflyHome() throws MalformedURLException, URISyntaxException {
@@ -185,7 +190,8 @@ public abstract class BaseBuildCallable implements BuildCallable {
         } while ( cur != null && !cur.getName().contains( "wildfly" ) );
 
         if ( cur == null ) {
-            throw new RuntimeException( "Could not locate Wildfly/JBoss root directory. Please set the errai.jboss.home system property." );
+            throw new RuntimeException(
+                    "Could not locate Wildfly/JBoss root directory. Please set the errai.jboss.home system property." );
         }
 
         return cur.getAbsolutePath();
