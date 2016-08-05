@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.livespark.client.dashbuilder;
+package org.livespark.client.layoutEditor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,7 +36,6 @@ import org.uberfire.ext.layout.editor.client.api.HasDragAndDropSettings;
 import org.uberfire.ext.layout.editor.client.api.ModalConfigurationContext;
 
 @Dependent
-
 public class LiveSparkDisplayerDragComponent extends DisplayerDragComponent implements HasDragAndDropSettings {
     public static final String APP_DATASETS = "appDataSets";
 
@@ -56,7 +55,7 @@ public class LiveSparkDisplayerDragComponent extends DisplayerDragComponent impl
     }
 
 
-    public void setLiveSparkApp( LiveSparkApp liveSparkApp ) {
+    public void setUp( LiveSparkApp liveSparkApp ) {
         appDataSets = separator;
         for ( String dataSet : liveSparkApp.getDataSets() ) {
             appDataSets += dataSet + separator;
@@ -107,5 +106,12 @@ public class LiveSparkDisplayerDragComponent extends DisplayerDragComponent impl
         Map<String, String> settings = new HashMap<>();
         settings.put( APP_DATASETS, appDataSets );
         return settings;
+    }
+
+    @Override
+    protected void adjustSize( DisplayerSettings settings, int containerWidth ) {
+        if ( containerWidth > 0 ) {
+            super.adjustSize( settings, containerWidth );
+        }
     }
 }

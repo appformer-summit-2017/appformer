@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-package org.livespark.backend.dashbuilder.layout;
+package org.livespark.backend.dashbuilder.layout.impl;
 
-import java.util.Map;
+import org.dashbuilder.displayer.DisplayerSettings;
+import org.livespark.client.shared.LiveSparkApp;
 
-import org.uberfire.ext.layout.editor.api.editor.LayoutComponent;
+public class LiveSparkDashBoardSettings {
 
-public abstract class LayoutComponentBuilder<T> {
+    private LiveSparkApp app;
 
-    protected T settings;
+    private DisplayerSettings settings;
 
-    public LayoutComponentBuilder( T settings ) {
+    public LiveSparkDashBoardSettings( LiveSparkApp app, DisplayerSettings settings ) {
+        this.app = app;
         this.settings = settings;
     }
 
-    public LayoutComponent getLayoutComponent() {
-        LayoutComponent layoutComponent = new LayoutComponent( getLayoutComponentClassName() );
-        layoutComponent.addProperties( getComponentSettings( settings ) );
-        return layoutComponent;
+    public LiveSparkApp getApp() {
+        return app;
     }
 
-    protected abstract String getLayoutComponentClassName();
-
-    protected abstract Map<String, String> getComponentSettings( T settings );
-
+    public DisplayerSettings getSettings() {
+        return settings;
+    }
 }

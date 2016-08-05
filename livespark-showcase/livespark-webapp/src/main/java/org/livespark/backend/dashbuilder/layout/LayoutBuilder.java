@@ -33,7 +33,11 @@ public class LayoutBuilder {
 
     private List<LayoutComponentBuilder> currentRow = new ArrayList<>();
 
-    public LayoutBuilder( String layoutName ) {
+    public static LayoutBuilder getLayoutBuilder( String name ) {
+        return new LayoutBuilder( name );
+    }
+
+    private LayoutBuilder( String layoutName ) {
         this.layoutName = layoutName;
     }
 

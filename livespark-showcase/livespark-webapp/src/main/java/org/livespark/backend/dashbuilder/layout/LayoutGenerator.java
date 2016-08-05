@@ -19,10 +19,31 @@ package org.livespark.backend.dashbuilder.layout;
 import java.util.List;
 
 import org.dashbuilder.displayer.DisplayerSettings;
+import org.livespark.backend.dashbuilder.layout.impl.LiveSparkAppDragComponentBuilder;
+import org.livespark.backend.dashbuilder.layout.impl.LiveSparkDashBoardSettings;
+import org.livespark.backend.dashbuilder.layout.impl.LiveSparkDashBuilderDragComponentBuilder;
 import org.livespark.client.shared.LiveSparkApp;
+import org.livespark.client.shared.LiveSparkAppPage;
 
 public class LayoutGenerator {
-    public static void generateLayout( LiveSparkApp app, List<DisplayerSettings> displayersSettingss ) {
+    public static void generateLayout( LiveSparkApp app, List<DisplayerSettings> displayersSettings ) {
+        LayoutBuilder builder = LayoutBuilder.getLayoutBuilder( app.getName() );
 
+        builder.addComponent( new LiveSparkAppDragComponentBuilder( app ) );
+
+        builder.newRow();
+
+        int count = 0;
+        for ( DisplayerSettings settings : displayersSettings ) {
+            if ( count > 1 ) {
+                builder.newRow();
+                count = 0;
+            }
+
+            builder.addComponent( new LiveSparkDashBuilderDragComponentBuilder( new LiveSparkDashBoardSettings( app, settings)));
+            count ++;
+        }
+
+        app.setPage( new LiveSparkAppPage( "Home", builder.build() ) );
     }
 }

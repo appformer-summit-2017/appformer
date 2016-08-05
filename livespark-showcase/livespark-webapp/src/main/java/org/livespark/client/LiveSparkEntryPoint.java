@@ -25,10 +25,12 @@ import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.guvnor.common.services.shared.config.AppConfigService;
+import org.jboss.errai.common.client.api.Assert;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.api.EntryPoint;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
+import org.jboss.errai.marshalling.client.Marshalling;
 import org.kie.workbench.common.screens.search.client.menu.SearchMenuBuilder;
 import org.kie.workbench.common.screens.social.hp.config.SocialConfigurationService;
 import org.kie.workbench.common.services.shared.service.PlaceManagerActivityService;
@@ -112,11 +114,7 @@ public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
     protected void onAppReady( @Observes AppReady appReady ) {
         refreshMenus();
 
-
-
-        PlaceRequest request = new DefaultPlaceRequest( "app" );
-        request.addParameter( "url", appReady.getApp().getUrl() );
-        placeManager.goTo( request );
+        goToLiveSparkAppScreen( appReady.getApp() );
     }
 
     @Override
@@ -179,17 +177,20 @@ public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
         return result;
     }
 
-    private MenuItem newAppMenuItem( LiveSparkApp app ) {
+    private MenuItem newAppMenuItem( final LiveSparkApp app ) {
 
-        return MenuFactory.newSimpleItem( app.getName() + "(" + app.getVersion() + ")" )
+        return MenuFactory.newSimpleItem( app.getName() + " (" + app.getVersion() + ")" )
                 .respondsWith( () -> {
-                    DefaultPlaceRequest request = new DefaultPlaceRequest( app.getGAV() );
-                    request.addParameter( "name", app.getName() );
-                    request.addParameter( "gav", app.getGAV() );
-                    request.addParameter( "version", app.getVersion() );
-                    request.addParameter( "url", app.getUrl() );
-                    placeManager.goTo( request );
+                    goToLiveSparkAppScreen( app );
                 } ).endMenu().build().getItems().get(0);
+    }
+
+    protected void goToLiveSparkAppScreen( LiveSparkApp app ) {
+        Assert.notNull( "App cannot be null", app );
+        PlaceRequest request = new DefaultPlaceRequest( "LiveSparkAppPerspective" );
+        String json = Marshalling.toJSON( app );
+        request.addParameter( "app", json );
+        placeManager.goTo( request );
     }
 
     private void refreshMenus() {
