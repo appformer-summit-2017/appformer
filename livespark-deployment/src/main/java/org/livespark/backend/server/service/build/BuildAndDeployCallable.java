@@ -23,9 +23,11 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionBindingEvent;
@@ -113,7 +115,7 @@ public class BuildAndDeployCallable extends BaseBuildCallable implements HttpSes
             }
 
             @Override
-            public void onFileChange(final File file) {
+            public void onFileChange( final File file ) {
                 buildLiveSparkApp( destination, sreq );
             }
         } );
@@ -124,7 +126,7 @@ public class BuildAndDeployCallable extends BaseBuildCallable implements HttpSes
     }
 
     private void replaceDeployedWarFile( final File war,
-                            final File destination ) throws IOException {
+                                         final File destination ) throws IOException {
         FileUtils.deleteQuietly( destination );
         FileUtils.copyFile( war, destination );
         deployedWars.add( destination );
@@ -145,22 +147,21 @@ public class BuildAndDeployCallable extends BaseBuildCallable implements HttpSes
         return targetDir;
     }
 
-    private Collection<File> getTargetWarFiles( ) {
+    private Collection<File> getTargetWarFiles() {
         final File targetDir = getTargetDir();
         return getWarFilesInDir( targetDir );
     }
 
     private Collection<File> getWarFilesInDir( final File dir ) {
-        if (dir.exists()) {
+        if ( dir.exists() ) {
             return FileUtils.listFiles( dir, new String[]{"war"}, false );
-        }
-        else {
+        } else {
             return Collections.emptyList();
         }
     }
 
     private File getDeployDir() throws MalformedURLException,
-                             URISyntaxException {
+            URISyntaxException {
         String home = getWildflyHome();
         File deployDir = new File( home, "/standalone/deployments" );
         return deployDir;
@@ -168,15 +169,14 @@ public class BuildAndDeployCallable extends BaseBuildCallable implements HttpSes
 
     private void buildLiveSparkApp( File war, ServletRequest sreq ) {
         final String url = "http://" +
-            sreq.getServerName() + ":" +
-            sreq.getServerPort() + "/" +
-            war.getName().replace( ".war", "" );
+                sreq.getServerName() + ":" +
+                sreq.getServerPort() + "/" +
+                war.getName().replace( ".war", "" );
 
-        final LiveSparkApp app = new LiveSparkApp( project.getProjectName(),
-                                             project.getPom().getGav().toString(),
-                                             project.getPom().getGav().getVersion(),
-                                             url );
-
+        final LiveSparkApp app = new LiveSparkApp( UUID.randomUUID().toString(), new Date(), project.getProjectName(),
+                                                   project.getPom().getGav().toString(),
+                                                   project.getPom().getGav().getVersion(),
+                                                   url );
 
 
 

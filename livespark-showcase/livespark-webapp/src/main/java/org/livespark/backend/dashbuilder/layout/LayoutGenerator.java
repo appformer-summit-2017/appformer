@@ -27,9 +27,13 @@ import org.livespark.client.shared.LiveSparkAppPage;
 
 public class LayoutGenerator {
     public static void generateLayout( LiveSparkApp app, List<DisplayerSettings> displayersSettings ) {
-        LayoutBuilder builder = LayoutBuilder.getLayoutBuilder( app.getName() );
+        LayoutBuilder builder = LayoutBuilder.getLayoutBuilder( "Home" );
 
         builder.addComponent( new LiveSparkAppDragComponentBuilder( app ) );
+
+        app.setHome( new LiveSparkAppPage( "Home", builder.build() ) );
+
+        builder = LayoutBuilder.getLayoutBuilder( "DashBoards" );
 
         builder.newRow();
 
@@ -44,6 +48,6 @@ public class LayoutGenerator {
             count ++;
         }
 
-        app.setPage( new LiveSparkAppPage( "Home", builder.build() ) );
+        app.setDashboards( new LiveSparkAppPage( "DashBoards", builder.build() ) );
     }
 }

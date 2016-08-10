@@ -36,82 +36,23 @@ import org.uberfire.ext.layout.editor.client.api.HasDragAndDropSettings;
 import org.uberfire.ext.layout.editor.client.api.ModalConfigurationContext;
 
 @Dependent
-public class LiveSparkDisplayerDragComponent extends DisplayerDragComponent implements HasDragAndDropSettings {
-    public static final String APP_DATASETS = "appDataSets";
-
-    public static final String separator = ",";
-
-    private String appDataSets = "";
-
-    private final SyncBeanManager beanManager;
-
+public class LiveSparkDisplayerDragComponent extends DisplayerDragComponent {
     @Inject
     public LiveSparkDisplayerDragComponent( SyncBeanManager beanManager,
                                             DisplayerViewer viewer,
                                             PlaceManager placeManager,
                                             PerspectiveCoordinator perspectiveCoordinator ) {
         super( beanManager, viewer, placeManager, perspectiveCoordinator );
-        this.beanManager = beanManager;
     }
 
 
-    public void setUp( LiveSparkApp liveSparkApp ) {
-        appDataSets = separator;
-        for ( String dataSet : liveSparkApp.getDataSets() ) {
-            appDataSets += dataSet + separator;
-        }
-    }
-
-    @Override
-    public Modal getConfigurationModal( ModalConfigurationContext ctx ) {
-
-        Map<String, String> properties = ctx.getComponentProperties();
-        String json = properties.get( "json" );
-
-        DisplayerSettingsJSONMarshaller marshaller = DisplayerSettingsJSONMarshaller.get();
-
-        DisplayerSettings settings = json != null ? marshaller.fromJsonString( json ) : null;
-        DisplayerEditor editor = beanManager.lookupBean( DisplayerEditor.class ).newInstance();
-
-        editor.getLookupEditor().setDataSetDefFilter( def -> appDataSets.contains( separator + def.getUUID() + separator ) );
-
-        DisplayerEditorPopup popup = new DisplayerEditorPopup( editor );
-
-        popup.init( settings );
-        popup.setOnSaveCommand( getSaveCommand( popup, ctx ) );
-        popup.setOnCloseCommand( getCloseCommand( popup, ctx ) );
-        return popup;
-
-    }
-
-    @Override
-    public String[] getSettingsKeys() {
-        return new String[]{ APP_DATASETS };
-    }
-
-    @Override
-    public String getSettingValue( String key ) {
-        return APP_DATASETS.equals( key ) ? appDataSets : "";
-    }
-
-    @Override
-    public void setSettingValue( String key, String value ) {
-        if ( APP_DATASETS.equals( key ) ) {
-            appDataSets = value;
-        }
-    }
-
-    @Override
-    public Map<String, String> getMapSettings() {
-        Map<String, String> settings = new HashMap<>();
-        settings.put( APP_DATASETS, appDataSets );
-        return settings;
-    }
 
     @Override
     protected void adjustSize( DisplayerSettings settings, int containerWidth ) {
         if ( containerWidth > 0 ) {
             super.adjustSize( settings, containerWidth );
+        } else {
+            settings.setTableWidth( 500 );
         }
     }
 }

@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.livespark.client.perspectives;
+
+package org.livespark.client.deployment.perspective;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
@@ -62,9 +63,7 @@ public class LiveSparkAppPerspective {
 
         PlaceRequest request = new DefaultPlaceRequest( "LiveSparkAppScreen" );
 
-        for ( String parameterName : place.getParameterNames() ) {
-            request.addParameter( parameterName, place.getParameter( parameterName, "" ) );
-        }
+        request.addParameter( "appId", place.getParameter( "appId", "" ) );
 
         perspective.getRoot().addPart( new PartDefinitionImpl( request) );
 

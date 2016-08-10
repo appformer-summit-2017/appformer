@@ -25,6 +25,8 @@ import com.google.gwt.dom.client.Style;
 import com.google.gwt.user.client.ui.Frame;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.SimplePanel;
+import org.gwtbootstrap3.client.shared.event.ModalHideEvent;
+import org.gwtbootstrap3.client.shared.event.ModalHideHandler;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.livespark.client.shared.LiveSparkApp;
 import org.uberfire.ext.layout.editor.client.api.HasDragAndDropSettings;
@@ -111,7 +113,14 @@ public class LiveSparkAppDragComponent implements LayoutDragComponent, HasDragAn
     }
 
     @Override
-    public Modal getConfigurationModal( ModalConfigurationContext ctx ) {
-        return new Modal();
+    public Modal getConfigurationModal( final ModalConfigurationContext ctx ) {
+        Modal modal = new Modal();
+        modal.addHideHandler( new ModalHideHandler() {
+            @Override
+            public void onHide( ModalHideEvent evt ) {
+                ctx.configurationFinished();
+            }
+        } );
+        return modal;
     }
 }

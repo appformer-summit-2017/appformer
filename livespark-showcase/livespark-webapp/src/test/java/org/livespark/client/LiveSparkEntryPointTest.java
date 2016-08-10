@@ -17,6 +17,7 @@
 package org.livespark.client;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwtmockito.GwtMockitoTestRunner;
@@ -131,7 +132,9 @@ public class LiveSparkEntryPointTest {
 
     @Test
     public void onAppReady() {
-        liveSparkEntryPoint.onAppReady( new AppReady( new LiveSparkApp( "appName",
+        liveSparkEntryPoint.onAppReady( new AppReady( new LiveSparkApp( "appId",
+                                                                        new Date(),
+                                                                        "appName",
                                                                         "org.demo:App:1.0-SNAPSHOT",
                                                                         "1.0-SNAPSHOT",
                                                                         "url" ) ) );

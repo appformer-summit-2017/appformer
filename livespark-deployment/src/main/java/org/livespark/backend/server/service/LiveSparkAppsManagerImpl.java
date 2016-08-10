@@ -74,8 +74,20 @@ public class LiveSparkAppsManagerImpl implements LiveSparkAppsManager {
     }
 
     @Override
-    public List<LiveSparkApp> getRegisteredApps() {
+    public LiveSparkApp getAppById( String appId ) {
+        List<LiveSparkApp> apps = getLiveSparkApps( appId );
+        if ( apps.isEmpty() ) {
+            return null;
+        }
+        return apps.get( 0 );
+    }
 
+    @Override
+    public List<LiveSparkApp> getRegisteredApps() {
+        return getLiveSparkApps( null );
+    }
+
+    protected List<LiveSparkApp> getLiveSparkApps( final String appId ) {
         final List<LiveSparkApp> result = new ArrayList<LiveSparkApp>();
 
         if ( ioService.exists( root ) ) {
@@ -92,18 +104,18 @@ public class LiveSparkAppsManagerImpl implements LiveSparkAppsManager {
                                           LiveSparkApp app = buildLiveSparkApp( file );
 
                                           if ( app != null ) {
-                                              result.add( app );
+                                              if ( appId == null || appId.equals( app.getId() ) ) {
+                                                  result.add( app );
+                                              }
                                           }
                                       }
                                   } catch ( final Exception ex ) {
-                                      //logger.error( "An unexpected exception was thrown: ", ex );
                                       return FileVisitResult.TERMINATE;
                                   }
                                   return FileVisitResult.CONTINUE;
                               }
                           } );
         }
-
         return result;
     }
 
@@ -127,6 +139,22 @@ public class LiveSparkAppsManagerImpl implements LiveSparkAppsManager {
             return;
         }
 
+        doSaveApp( appPath, liveSparkApp );
+    }
+
+    @Override
+    public void updateApp( LiveSparkApp liveSparkApp ) {
+        checkNotNull( "App cannot be null", liveSparkApp );
+
+        final Path appPath = getLiveSparkAppPath( liveSparkApp );
+        if ( !ioService.exists( appPath ) ) {
+            return;
+        }
+
+        doSaveApp( appPath, liveSparkApp );
+    }
+
+    protected void doSaveApp( Path appPath, LiveSparkApp liveSparkApp ) {
         try {
             ioService.startBatch( fileSystem );
             ioService.write( appPath,
@@ -137,6 +165,6 @@ public class LiveSparkAppsManagerImpl implements LiveSparkAppsManager {
     }
 
     private Path getLiveSparkAppPath( final LiveSparkApp liveSparkApp ) {
-        return root.resolve( liveSparkApp.getGAV() + ".ls" );
+        return root.resolve( liveSparkApp.getGav() + ".ls" );
     }
 }

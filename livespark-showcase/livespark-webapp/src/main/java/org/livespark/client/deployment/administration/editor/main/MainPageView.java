@@ -14,21 +14,11 @@
  * limitations under the License.
  */
 
-package org.livespark.client.shared;
+package org.livespark.client.deployment.administration.editor.main;
 
-import java.util.List;
+import com.google.gwt.user.client.ui.IsWidget;
+import org.livespark.client.shared.LiveSparkApp;
 
-import org.jboss.errai.bus.server.annotations.Remote;
-
-@Remote
-public interface LiveSparkAppsManager {
-
-    List<LiveSparkApp> getRegisteredApps();
-
-    LiveSparkApp getAppById( String appId );
-
-    void registerApp( LiveSparkApp liveSparkApp );
-
-    void updateApp( LiveSparkApp liveSparkApp );
-
+public interface MainPageView extends IsWidget {
+    void init( LiveSparkApp liveSparkApp );
 }

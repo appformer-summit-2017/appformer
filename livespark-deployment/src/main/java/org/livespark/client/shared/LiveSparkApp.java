@@ -17,28 +17,57 @@
 package org.livespark.client.shared;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.jboss.errai.common.client.api.annotations.MapsTo;
 import org.jboss.errai.common.client.api.annotations.Portable;
+import org.jboss.errai.databinding.client.api.Bindable;
 
 @Portable
+@Bindable
 public class LiveSparkApp {
+    private String id;
+    private Date deploymendDate;
     private String name;
-    private String GAV;
+    private String gav;
     private String version;
     private String url;
     private List<String> dataSets = new ArrayList<>();
-    private LiveSparkAppPage page;
+    private LiveSparkAppPage home;
+    private LiveSparkAppPage dashboards;
 
-    public LiveSparkApp( @MapsTo( "name" ) String name,
-                         @MapsTo( "GAV" ) String GAV,
+    public LiveSparkApp() {
+    }
+
+    public LiveSparkApp( @MapsTo( "id" ) String id,
+                         @MapsTo( "deploymendDate" ) Date deploymendDate,
+                         @MapsTo( "name" ) String name,
+                         @MapsTo( "gav" ) String gav,
                          @MapsTo( "version" ) String version,
                          @MapsTo( "url" ) String url ) {
+        this.id = id;
+        this.deploymendDate = deploymendDate;
         this.name = name;
-        this.GAV = GAV;
+        this.gav = gav;
         this.version = version;
         this.url = url;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId( String id ) {
+        this.id = id;
+    }
+
+    public Date getDeploymendDate() {
+        return deploymendDate;
+    }
+
+    public void setDeploymendDate( Date deploymendDate ) {
+        this.deploymendDate = deploymendDate;
     }
 
     public String getName() {
@@ -49,12 +78,12 @@ public class LiveSparkApp {
         this.name = name;
     }
 
-    public String getGAV() {
-        return GAV;
+    public String getGav() {
+        return gav;
     }
 
-    public void setGAV( String GAV ) {
-        this.GAV = GAV;
+    public void setGav( String gav ) {
+        this.gav = gav;
     }
 
     public String getVersion() {
@@ -81,11 +110,24 @@ public class LiveSparkApp {
         this.dataSets = dataSets;
     }
 
-    public LiveSparkAppPage getPage() {
-        return page;
+    public LiveSparkAppPage getHome() {
+        return home;
     }
 
-    public void setPage( LiveSparkAppPage page ) {
-        this.page = page;
+    public void setHome( LiveSparkAppPage home ) {
+        this.home = home;
+    }
+
+    public LiveSparkAppPage getDashboards() {
+        return dashboards;
+    }
+
+    public void setDashboards( LiveSparkAppPage dashboards ) {
+        this.dashboards = dashboards;
+    }
+
+    @Override
+    public String toString() {
+        return name + " (" + version + ")";
     }
 }
