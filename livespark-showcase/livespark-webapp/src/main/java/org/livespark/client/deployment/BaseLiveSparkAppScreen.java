@@ -27,6 +27,8 @@ import org.uberfire.mvp.PlaceRequest;
 
 public abstract class BaseLiveSparkAppScreen extends Composite {
 
+    protected String appName = null;
+
     protected String liveSparkAppId;
 
     protected LiveSparkApp liveSparkApp;
@@ -43,6 +45,7 @@ public abstract class BaseLiveSparkAppScreen extends Composite {
         this.place = place;
 
         liveSparkAppId = place.getParameter( "appId", "" );
+        appName = place.getParameter( "appName", null );
     }
 
     @OnOpen

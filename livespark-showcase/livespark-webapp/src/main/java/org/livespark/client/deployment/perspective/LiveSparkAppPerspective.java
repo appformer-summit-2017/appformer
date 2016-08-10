@@ -64,6 +64,7 @@ public class LiveSparkAppPerspective {
         PlaceRequest request = new DefaultPlaceRequest( "LiveSparkAppScreen" );
 
         request.addParameter( "appId", place.getParameter( "appId", "" ) );
+        request.addParameter( "appName", place.getParameter( "appName", "" ) );
 
         perspective.getRoot().addPart( new PartDefinitionImpl( request) );
 

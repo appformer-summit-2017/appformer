@@ -75,8 +75,8 @@ public class LiveSparkAppScreen extends BaseLiveSparkAppScreen {
 
     @WorkbenchPartTitle
     public String title() {
-        if ( liveSparkApp != null ) {
-            return liveSparkApp.getName();
+        if ( appName != null ) {
+            return appName;
         }
         return "Your app";
     }

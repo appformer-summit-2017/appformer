@@ -46,6 +46,10 @@ public interface AppConstants
 
     String contributors();
 
+    String deployedApps();
+
+    String deployedAppsAdministration();
+
     String timeline();
 
     String people();
