@@ -1098,7 +1098,23 @@
 
     <dependency>
       <groupId>org.livespark</groupId>
-      <artifactId>livespark-deployment</artifactId>
+      <artifactId>livespark-deployment-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-deployment-backend</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-deployment-client</artifactId>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.livespark</groupId>
+      <artifactId>livespark-deployment-dashbuilder-extension</artifactId>
     </dependency>
     <!-- End LiveSpark Modules -->
 
@@ -1327,7 +1343,8 @@
               <compileSourcesArtifact>org.livespark:livespark-form-modeler-dynamic-renderer-client</compileSourcesArtifact>
               <compileSourcesArtifact>org.livespark:livespark-form-modeler-editor-api</compileSourcesArtifact>
               <compileSourcesArtifact>org.livespark:livespark-form-modeler-editor-client</compileSourcesArtifact>
-              <compileSourcesArtifact>org.livespark:livespark-deployment</compileSourcesArtifact>
+              <compileSourcesArtifact>org.livespark:livespark-deployment-api</compileSourcesArtifact>
+              <compileSourcesArtifact>org.livespark:livespark-deployment-client</compileSourcesArtifact>
 
               <!-- Data sources management -->
               <compileSourcesArtifact>org.kie.workbench.screens:kie-wb-common-datasource-mgmt-api</compileSourcesArtifact>

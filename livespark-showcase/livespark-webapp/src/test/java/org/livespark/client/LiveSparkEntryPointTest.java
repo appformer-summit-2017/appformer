@@ -16,20 +16,11 @@
 
 package org.livespark.client;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.google.gwtmockito.GwtMockitoTestRunner;
 import org.guvnor.common.services.shared.config.AppConfigService;
 import org.jboss.errai.ioc.client.container.SyncBeanManager;
 import org.junit.Before;
@@ -41,7 +32,8 @@ import org.kie.workbench.common.workbench.client.authz.PermissionTreeSetup;
 import org.kie.workbench.common.workbench.client.menu.DefaultWorkbenchFeaturesMenusHelper;
 import org.livespark.client.home.HomeProducer;
 import org.livespark.client.resources.i18n.AppConstants;
-import org.livespark.client.shared.AppReady;
+import org.livespark.deployment.model.LiveSparkApp;
+import org.livespark.deployment.service.events.AppReady;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.uberfire.client.mvp.ActivityBeansCache;
@@ -57,44 +49,38 @@ import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.workbench.model.menu.MenuItem;
 import org.uberfire.workbench.model.menu.Menus;
 
-import com.google.gwtmockito.GwtMockitoTestRunner;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Mockito.*;
 
-@RunWith(GwtMockitoTestRunner.class)
+@RunWith( GwtMockitoTestRunner.class )
 public class LiveSparkEntryPointTest {
 
     @Mock
+    protected ClientUserSystemManager userSystemManager;
+    @Mock
+    protected WorkbenchMenuBarPresenter menuBar;
+    @Mock
+    protected SyncBeanManager iocManager;
+    @Mock
+    protected Workbench workbench;
+    @Mock
     private AppConfigService appConfigService;
     private CallerMock<AppConfigService> appConfigServiceCallerMock;
-
     @Mock
     private PlaceManagerActivityService pmas;
     private CallerMock<PlaceManagerActivityService> pmasCallerMock;
-
     @Mock
     private ActivityBeansCache activityBeansCache;
-
     @Mock
     private HomeProducer homeProducer;
-
     @Mock
     private SocialConfigurationService socialConfigurationService;
     private CallerMock<SocialConfigurationService> socialConfigurationServiceCallerMock;
-
     @Mock
     private DefaultWorkbenchFeaturesMenusHelper menusHelper;
-
-    @Mock
-    protected ClientUserSystemManager userSystemManager;
-
-    @Mock
-    protected WorkbenchMenuBarPresenter menuBar;
-
-    @Mock
-    protected SyncBeanManager iocManager;
-
-    @Mock
-    protected Workbench workbench;
-
     @Mock
     private PlaceManager placeManager;
 
@@ -109,7 +95,7 @@ public class LiveSparkEntryPointTest {
 
         doReturn( Boolean.TRUE ).when( socialConfigurationService ).isSocialEnable();
         doAnswer( invocationOnMock -> {
-            ( (Command) invocationOnMock.getArguments()[ 0 ] ).execute();
+            ( (Command) invocationOnMock.getArguments()[0] ).execute();
             return null;
         } ).when( userSystemManager ).waitForInitialization( any( Command.class ) );
 
@@ -146,7 +132,12 @@ public class LiveSparkEntryPointTest {
 
     @Test
     public void onAppReady() {
-        liveSparkEntryPoint.onAppReady( new AppReady( "url" ) );
+        liveSparkEntryPoint.onAppReady( new AppReady( new LiveSparkApp( "appId",
+                                                                        new Date(),
+                                                                        "appName",
+                                                                        "org.demo:App:1.0-SNAPSHOT",
+                                                                        "1.0-SNAPSHOT",
+                                                                        "url" ) ) );
 
         verify( placeManager ).goTo( any( PlaceRequest.class ) );
     }

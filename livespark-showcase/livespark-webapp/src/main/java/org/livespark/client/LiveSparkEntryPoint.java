@@ -15,13 +15,17 @@
  */
 package org.livespark.client;
 
+import static org.kie.workbench.common.workbench.client.PerspectiveIds.SERVER_MANAGEMENT;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 
 import org.guvnor.common.services.shared.config.AppConfigService;
+import org.jboss.errai.common.client.api.Assert;
 import org.jboss.errai.common.client.api.Caller;
 import org.jboss.errai.common.client.api.RemoteCallback;
 import org.jboss.errai.ioc.client.api.EntryPoint;
@@ -34,7 +38,9 @@ import org.kie.workbench.common.workbench.client.entrypoint.DefaultWorkbenchEntr
 import org.kie.workbench.common.workbench.client.menu.DefaultWorkbenchFeaturesMenusHelper;
 import org.livespark.client.home.HomeProducer;
 import org.livespark.client.resources.i18n.AppConstants;
-import org.livespark.client.shared.AppReady;
+import org.livespark.deployment.model.LiveSparkApp;
+import org.livespark.deployment.service.LiveSparkAppsManager;
+import org.livespark.deployment.service.events.AppReady;
 import org.uberfire.client.mvp.ActivityBeansCache;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.Workbench;
@@ -72,6 +78,9 @@ public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
     protected PermissionTreeSetup permissionTreeSetup;
 
     @Inject
+    protected Caller<LiveSparkAppsManager> liveSparkAppsManager;
+
+    @Inject
     public LiveSparkEntryPoint( Caller<AppConfigService> appConfigService,
                                 Caller<PlaceManagerActivityService> pmas,
                                 ActivityBeansCache activityBeansCache,
@@ -104,9 +113,9 @@ public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
     }
 
     protected void onAppReady( @Observes AppReady appReady ) {
-        PlaceRequest request = new DefaultPlaceRequest( "app" );
-        request.addParameter( "url", appReady.getUrl() );
-        placeManager.goTo( request );
+        refreshMenus();
+
+        goToLiveSparkAppScreen( appReady.getApp() );
     }
 
     @Override
@@ -116,30 +125,73 @@ public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
         socialConfigurationService.call( new RemoteCallback<Boolean>() {
             public void callback( final Boolean socialEnabled ) {
 
-                // Wait for user management services to be initialized, if any.
-                userSystemManager.waitForInitialization( () -> {
+                liveSparkAppsManager.call( new RemoteCallback<List<LiveSparkApp>>() {
 
-                    final Menus menus =
-                            MenuFactory.newTopLevelMenu( constants.home() ).withItems( menusHelper.getHomeViews( socialEnabled ) ).endMenu()
+                    @Override
+                    public void callback( final List<LiveSparkApp> deployedApps ) {
+                        // Wait for user management services to be initialized, if any.
+                        userSystemManager.waitForInitialization( () -> {
+
+                            menuBar.clear();
+                            final Menus menus;
+                            menus = MenuFactory.newTopLevelMenu( constants.home() ).withItems( menusHelper.getHomeViews(
+                                    socialEnabled ) ).endMenu()
                                     .newTopLevelMenu( constants.authoring() ).withItems( menusHelper.getAuthoringViews() ).endMenu()
                                     .newTopLevelMenu( constants.deploy() ).withItems( getDeploymentViews() ).endMenu()
                                     .newTopLevelMenu( constants.extensions() ).withItems( getExtensionsViews() ).endMenu()
                                     .newTopLevelCustomMenu( iocManager.lookupBean( SearchMenuBuilder.class ).getInstance() ).endMenu()
+                                    .newTopLevelMenu( constants.deployedApps() ).withItems( getLiveSparkDeployedApps(
+                                            deployedApps ) ).endMenu()
                                     .build();
 
-                    menuBar.addMenus( menus );
+                            menuBar.addMenus( menus );
 
-                    menusHelper.addRolesMenuItems();
-                    menusHelper.addWorkbenchConfigurationMenuItem();
-                    menusHelper.addUtilitiesMenuItems();
+                            menusHelper.addRolesMenuItems();
+                            menusHelper.addWorkbenchConfigurationMenuItem();
+                            menusHelper.addUtilitiesMenuItems();
 
-                    workbench.removeStartupBlocker( LiveSparkEntryPoint.class );
-
-                } );
+                            workbench.removeStartupBlocker( LiveSparkEntryPoint.class );
+                        } );
+                    }
+                } ).getRegisteredApps();
 
             }
         } ).isSocialEnable();
     }
+
+    private List<? extends MenuItem> getLiveSparkDeployedApps( List<LiveSparkApp> deployedApps ) {
+        final List<MenuItem> result = new ArrayList<>( 2 );
+
+        for ( LiveSparkApp app : deployedApps ) {
+            result.add( newAppMenuItem( app ) );
+        }
+
+        result.add( MenuFactory.newSimpleItem( constants.deployedAppsAdministration() ).respondsWith( () -> placeManager.goTo(
+                new DefaultPlaceRequest( "LiveSparkAppsEditionPerspective" ) ) ).endMenu().build().getItems().get( 0 ) );
+        return result;
+    }
+
+    private MenuItem newAppMenuItem( final LiveSparkApp app ) {
+
+        return MenuFactory.newSimpleItem( app.toString() )
+                .respondsWith( () -> {
+                    goToLiveSparkAppScreen( app );
+                } ).endMenu().build().getItems().get( 0 );
+    }
+
+    protected void goToLiveSparkAppScreen( LiveSparkApp app ) {
+        Assert.notNull( "App cannot be null", app );
+        PlaceRequest request = new DefaultPlaceRequest( "LiveSparkAppPerspective" );
+        request.addParameter( "appId", app.getId() );
+        request.addParameter( "appName", app.toString() );
+        placeManager.goTo( request );
+    }
+
+    private void refreshMenus() {
+
+        setupMenu();
+    }
+
 
     protected List<? extends MenuItem> getExtensionsViews() {
 
@@ -150,11 +202,11 @@ public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
         result.addAll( menusHelper.getExtensionsViews() );
 
         result.add( MenuFactory.newSimpleItem( constants.dataSourceManagement() )
-                .place( new DefaultPlaceRequest( DATASOURCE_MANAGEMENT ) )
-                .endMenu()
-                .build()
-                .getItems()
-                .get( 0 ) );
+                            .place( new DefaultPlaceRequest( DATASOURCE_MANAGEMENT ) )
+                            .endMenu()
+                            .build()
+                            .getItems()
+                            .get( 0 ) );
 
         return result;
     }
@@ -163,8 +215,8 @@ public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
         final List<MenuItem> result = new ArrayList<>( 1 );
 
         result.add( MenuFactory.newSimpleItem( constants.ruleDeployments() )
-                                    .perspective( SERVER_MANAGEMENT )
-                                    .endMenu().build().getItems().get( 0 ) );
+                            .perspective( SERVER_MANAGEMENT )
+                            .endMenu().build().getItems().get( 0 ) );
 
         return result;
     }
