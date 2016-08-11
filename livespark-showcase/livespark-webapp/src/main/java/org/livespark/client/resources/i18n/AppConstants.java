@@ -122,4 +122,7 @@ public interface AppConstants
 
     String Messages();
 
+    String deployedApps();
+
+    String deployedAppsAdministration();
 }

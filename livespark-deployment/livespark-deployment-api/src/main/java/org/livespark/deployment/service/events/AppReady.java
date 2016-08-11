@@ -23,15 +23,16 @@ import org.livespark.deployment.model.LiveSparkApp;
 @Portable
 public class AppReady {
 
-	final String url;
-
-	public AppReady(@MapsTo("url") String url) {
-		this.url = url;
+	private LiveSparkApp app;
+	public AppReady( @MapsTo("app") LiveSparkApp app ) {
+		this.app = app;
 	}
 
-	public String getUrl() {
-		return url;
+	public LiveSparkApp getApp() {
+		return app;
 	}
-	
-	
+
+	public void setApp( LiveSparkApp app ) {
+		this.app = app;
+	}
 }

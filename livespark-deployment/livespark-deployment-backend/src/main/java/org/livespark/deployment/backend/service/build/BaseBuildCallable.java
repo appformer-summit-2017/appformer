@@ -54,18 +54,21 @@ public abstract class BaseBuildCallable implements BuildCallable {
     protected final ServerMessageBus bus;
     protected final String queueSessionId;
     protected final OutputHandler outputHandler;
+    protected final LiveSparkAppBuilder liveSparkAppBuilder;
 
 
     BaseBuildCallable( Project project,
                        File pomXml,
                        String queueSessionId,
                        ServletRequest sreq,
-                       ServerMessageBus bus ) {
+                       ServerMessageBus bus,
+                       LiveSparkAppBuilder liveSparkAppBuilder ) {
         this.project = project;
         this.pomXml = pomXml;
         this.queueSessionId = queueSessionId;
         this.sreq = sreq;
         this.bus = bus;
+        this.liveSparkAppBuilder = liveSparkAppBuilder;
 
         OutputHandler outputHandler = new ClientOutputHandler( bus, queueSessionId );
         if ( logBuildOutput ) {
