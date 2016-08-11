@@ -40,7 +40,7 @@
     <validation.api.version>1.0.0.GA</validation.api.version>
     <javaee.version>1.0.2.Final</javaee.version>
     <jdk.min.version>1.7.0</jdk.min.version>
-    <maven.invoker.version>2.1.1</maven.invoker.version>    
+    <maven.invoker.version>2.1.1</maven.invoker.version>
     <enforcer.skip>true</enforcer.skip>
   </properties>
 
@@ -218,7 +218,22 @@
       </dependency>
       <dependency>
         <groupId>org.livespark</groupId>
-        <artifactId>livespark-deployment</artifactId>
+        <artifactId>livespark-deployment-api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-deployment-backend</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-deployment-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.livespark</groupId>
+        <artifactId>livespark-deployment-dashbuilder-extension</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

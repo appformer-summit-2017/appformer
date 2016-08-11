@@ -38,15 +38,14 @@ import org.kie.workbench.common.workbench.client.entrypoint.DefaultWorkbenchEntr
 import org.kie.workbench.common.workbench.client.menu.DefaultWorkbenchFeaturesMenusHelper;
 import org.livespark.client.home.HomeProducer;
 import org.livespark.client.resources.i18n.AppConstants;
-import org.livespark.client.shared.AppReady;
-import org.livespark.client.shared.LiveSparkApp;
-import org.livespark.client.shared.LiveSparkAppsManager;
+import org.livespark.deployment.model.LiveSparkApp;
+import org.livespark.deployment.service.LiveSparkAppsManager;
+import org.livespark.deployment.service.events.AppReady;
 import org.uberfire.client.mvp.ActivityBeansCache;
 import org.uberfire.client.mvp.PlaceManager;
 import org.uberfire.client.workbench.Workbench;
 import org.uberfire.client.workbench.widgets.menu.WorkbenchMenuBarPresenter;
 import org.uberfire.ext.security.management.client.ClientUserSystemManager;
-import org.uberfire.mvp.Command;
 import org.uberfire.mvp.PlaceRequest;
 import org.uberfire.mvp.impl.DefaultPlaceRequest;
 import org.uberfire.workbench.model.menu.MenuFactory;
@@ -116,11 +115,7 @@ public class LiveSparkEntryPoint extends DefaultWorkbenchEntryPoint {
     protected void onAppReady( @Observes AppReady appReady ) {
         refreshMenus();
 
-
-
-        PlaceRequest request = new DefaultPlaceRequest( "app" );
-        request.addParameter( "url", appReady.getApp().getUrl() );
-        placeManager.goTo( request );
+        goToLiveSparkAppScreen( appReady.getApp() );
     }
 
     @Override
